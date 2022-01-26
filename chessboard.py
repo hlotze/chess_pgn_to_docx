@@ -153,7 +153,7 @@ start_white_str = \
     'bl a- b- c- d- e- f- g- h- br \n'
 
 
-def str2arr(cb_str) -> np.ndarray:
+def str2arr(cb_str: str) -> np.ndarray:
     """Return the chessboard string as ndarray (10,10)"""
     cb_tmp = str(cb_str).replace('\n', '', -1).replace(' ', '', -1)
     cb_arr = np.array([cb_tmp[i:i+2]
@@ -161,7 +161,7 @@ def str2arr(cb_str) -> np.ndarray:
     return(cb_arr)
 
 
-def arr2str(cb_arr, sep=' ') -> str:
+def arr2str(cb_arr: np.ndarray, sep=' ') -> str:
     """Return the chessboard ndarray as string"""
     cb_str = ''
     for f in range(10):
@@ -172,7 +172,7 @@ def arr2str(cb_arr, sep=' ') -> str:
     return(cb_str)
 
 
-def arr_flip(cb_arr) -> np.ndarray:
+def arr_flip(cb_arr: np.ndarray) -> np.ndarray:
     """Return the chessboard ndarray 
        as flipped ndarray (10,10)"""
     cb_arr_flipped = np.full((10, 10), '__').reshape(10, 10)
@@ -191,19 +191,19 @@ def arr_flip(cb_arr) -> np.ndarray:
     return(cb_arr_flipped)
 
 
-def str_flip(cb_str) -> str:
+def str_flip(cb_str: str) -> str:
     """Return the chessboard string as flipped string"""
     return(arr2str(arr_flip(str2arr(cb_str))))
 
 
-def str_isflipped(cb1_str, cb2_str) -> bool:
+def str_isflipped(cb1_str: str, cb2_str: str) -> bool:
     """Return the comparism of 2 chessboards' 
        strings, if the 2nd is identical 
        but flipped to the 1st"""
     return(cb1_str == str_flip(cb2_str))
 
 
-def arr_isflipped(cb1_arr, cb2_arr) -> bool:
+def arr_isflipped(cb1_arr: np.ndarray, cb2_arr: np.ndarray) -> bool:
     """Return the comparism of 2 chessboards' 
        ndarrays, if the 2nd is identical 
        but flipped to the 1st"""
@@ -225,7 +225,7 @@ def isflipped(cb1, cb2) -> bool:
     return(str_isflipped(cb1_str, cb2_str))
 
 
-def str2ttf(cb_str) -> str:
+def str2ttf(cb_str: str) -> str:
     """Return the chessbord string as TTF string"""
     cb_arr = str2arr(cb_str)
     cb_ttf_str = ''
@@ -237,7 +237,7 @@ def str2ttf(cb_str) -> str:
     return(cb_ttf_str)
 
 
-def arr2ttf(cb_arr) -> str:
+def arr2ttf(cb_arr: np.ndarray) -> str:
     """Return the chessbord np.ndarray as TTF string"""
     cb_ttf_str = ''
     for x in range(10):
@@ -288,7 +288,7 @@ empty_white_str = arr2str(empty_white_arr)
 empty_black_str = arr2str(empty_black_arr)
 
 
-def board2arr(board) -> np.ndarray:
+def board2arr(board: chess.Board) -> np.ndarray:
     """Return the chessboard ndarray from a 'chess.board'"""
     # the chessboard from White view
     # with
@@ -339,11 +339,11 @@ def board2arr(board) -> np.ndarray:
                 out_arr[r+1][f+1] = out
     return(np.array(out_arr))
 
-def board2str(board) -> str:
+def board2str(board: chess.Board) -> str:
     """Return the chessboard str from a 'chess.board'"""
     return(arr2str(board2arr(board)))
 
-def board2ttf(board) -> str:
+def board2ttf(board: chess.Board) -> str:
     """Return the chessboard TTF from a 'chess.board'"""
     return(str2ttf(arr2str(board2arr(board))))
 
