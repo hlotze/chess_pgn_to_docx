@@ -23,7 +23,7 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
   - [ ] a transfer of one complete PGN match to one document
 - [ ] add some manual comments or automatically generated comments to each puzzle's move; e.g. by means of [`python-chess`](https://python-chess.readthedocs.io/en/latest/) accessing the [Stockfish](https://stockfishchess.org/) engine
 - [ ] refactor coding to get aligned to [`python-chess`](https://python-chess.readthedocs.io/en/latest/) naming conventions and structures
-- [ ] add unit tests
+- [x] add unit tests - initially done, so refactoring or code optimization and its verification will be easier later
 
 ## Contact
 [@hlotze](https://github.com/hlotze)
