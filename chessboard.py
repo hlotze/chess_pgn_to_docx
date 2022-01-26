@@ -207,7 +207,7 @@ def arr_isflipped(cb1_arr, cb2_arr) -> bool:
     """Return the comparism of 2 chessboards' 
        ndarrays, if the 2nd is identical 
        but flipped to the 1st"""
-    return(str_isflipped(arr2str(cb1_arr), arr2str(cb2_arr)))
+    return(np.array_equal(cb1_arr, arr_flip(cb2_arr)))
 
 
 def isflipped(cb1, cb2) -> bool:
@@ -302,9 +302,12 @@ def board2arr(board) -> np.ndarray:
     #   ( 0,  0) top left, and
     #   (10, 10) bottom right
 
+    # as PGN printouts are usually from white perspective 
+    # this is a reasonable assumption
     orientation = chess.WHITE
     board_arr = np.full((8, 8), '_')
-    for square, bb in enumerate(chess.BB_SQUARES):  # a1 b1 c1 ... h1,
+    for square, bb in enumerate(chess.BB_SQUARES):  
+        # a1 b1 c1 ... h1,
         # a2 b2 c2 ... h2,
         # ...,
         # a8 b8 c8 ... h8

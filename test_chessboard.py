@@ -1,5 +1,6 @@
 import chessboard as cb
 
+import numpy as np
 import chess
 import unittest
 
@@ -86,20 +87,24 @@ class Test_unittest(unittest.TestCase):
     # Test 7
     def test_start_white_arr(self):
         self.assertEqual(
-            cb.arr2str(cb.start_white_arr),
-            cb.start_white_str)
+            True,
+            np.array_equal(cb.start_white_arr,
+                           cb.str2arr(cb.start_white_str)))
+
     
     # Test 8
     def test_start_black_arr(self):
         self.assertEqual(
-            cb.arr2str(cb.start_black_arr),
-            cb.start_black_str)
+            True,
+            np.array_equal(cb.start_black_arr,
+                           cb.str2arr(cb.start_black_str)))
 
     # Test 9
     def test_empty_white_arr(self):
         self.assertEqual(
-            cb.arr2str(cb.empty_white_arr),
-            cb.empty_white_str)
+            True,
+            np.array_equal(cb.empty_white_arr,
+                           cb.str2arr(cb.empty_white_str)))
 
     # Test 10
     def test_empty_black_arr(self):
@@ -122,8 +127,9 @@ class Test_unittest(unittest.TestCase):
     # Test 13
     def test_arr_flip(self):
         self.assertEqual(
-            cb.arr2str(cb.start_black_arr),
-            cb.arr2str(cb.arr_flip(cb.start_white_arr)))
+            True,
+            np.array_equal(cb.start_black_arr,
+                           cb.arr_flip(cb.start_white_arr)))
 
     # Test 14
     def test_str_flip(self):
@@ -132,14 +138,14 @@ class Test_unittest(unittest.TestCase):
             cb.str_flip(cb.start_black_str))
 
     # Test 15
-    def test_str_isflip(self):
+    def test_str_isflipped(self):
         self.assertEqual(
             True,
             cb.str_isflipped(cb.start_white_str,
                              cb.start_black_str))
 
     # Test 16
-    def test_str_isflipped(self):
+    def test_arr_isflipped(self):
         self.assertEqual(
             True,
             cb.arr_isflipped(cb.start_white_arr,
