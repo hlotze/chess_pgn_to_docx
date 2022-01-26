@@ -229,10 +229,10 @@ def str2ttf(cb_str) -> str:
     """Return the chessbord string as TTF string"""
     cb_arr = str2arr(cb_str)
     cb_ttf_str = ''
-    for f in range(10):
+    for x in range(10):
         l = ''
-        for r in range(10):
-            l += font_dict[cb_arr[f, r]].format('b')
+        for y in range(10):
+            l += font_dict[cb_arr[x, y]].format('b')
         cb_ttf_str += l + '\n'
     return(cb_ttf_str)
 
@@ -240,10 +240,10 @@ def str2ttf(cb_str) -> str:
 def arr2ttf(cb_arr) -> str:
     """Return the chessbord np.ndarray as TTF string"""
     cb_ttf_str = ''
-    for f in range(10):
+    for x in range(10):
         l = ''
-        for r in range(10):
-            l += font_dict[cb_arr[f, r]].format('b')
+        for y in range(10):
+            l += font_dict[str(cb_arr[x, y])].format('b')
         cb_ttf_str += l + '\n'
     return(cb_ttf_str)
 
@@ -272,7 +272,7 @@ def _empty_white_cb_arr() -> np.ndarray:
     # make an ndarray
     bw_arr = np.array([bw_tmp[i:i+2]
                        for i in range(0, len(bw_tmp), 2)]).reshape((8, 8))
-    cb_arr = start_white_arr
+    cb_arr = start_white_arr.copy()
     # put into standard white board --> drop pieces
     cb_arr[1:9, 1:9] = bw_arr[0:8, 0:8]
     # return the white board without the pieces
@@ -336,64 +336,46 @@ def board2arr(board) -> np.ndarray:
                 out_arr[r+1][f+1] = out
     return(np.array(out_arr))
 
+def board2str(board) -> str:
+    """Return the chessboard str from a 'chess.board'"""
+    return(arr2str(board2arr(board)))
+
+def board2ttf(board) -> str:
+    """Return the chessboard TTF from a 'chess.board'"""
+    return(str2ttf(arr2str(board2arr(board))))
 
 def main():
+
+    # some examples
     print('\nChessboard - White')
-    print(start_white_str[:-1])
+    print(start_white_str)
 
-    cb_arr = str2arr(start_white_str)
-    print('\nChessboard - White as array')
-    print(cb_arr)
-
-    print('\nChessboard - White as string')
-    cb_str = arr2str(cb_arr)
-    print(cb_str)
-
-    print('is Chessboard White == processed CB:', start_white_str == cb_str)
-
-    print('-------------------------------------')
-    cb_arr_flipped = arr_flip(cb_arr)
     print('Chessboard - White - flipped')
-    print(arr2str(cb_arr_flipped))
-    print('is Chessboard White == Chessboard Black:',
-          start_white_str == start_black_str)
-    print('str_isflipped(Chessboard - White, Chessboard - Black):',
-          str_isflipped(start_white_str, start_black_str))
-    print('str_isflipped(Chessboard - White, Chessboard - White - flipped):',
-          str_isflipped(start_white_str, str_flip(start_white_str)))
-    print('arr_isflipped(Chessboard - White, Chessboard - White - flipped):',
-          arr_isflipped(str2arr(start_white_str),
-                        str2arr(str_flip(start_white_str))))
+    print(str_flip(start_white_str))
+
     print('isflipped(Chessboard - White, Chessboard - White - flipped):',
           isflipped(start_white_str, start_black_arr))
 
-    print('-------------------------------------')
-    print('Chessboard - white - TTF')
+    print('\n-------------------------------------')
+    print('Chessboard - White - TTF')
     print(str2ttf(start_white_str))
 
-    print('Chessboard - white - TTF - flipped')
-    print(str2ttf(str_flip(start_white_str)))
+    print('Chessboard - Black - TTF')
+    print(str2ttf(start_black_str))
+
 
     print('-------------------------------------')
-    print('Chessboard - white - empty arr')
-    print(empty_white_arr)
-    print('Chessboard - white - empty str')
-    print(arr2str(empty_white_arr))
-    print('Chessboard - empty white - TTF')
-    print(str2ttf(empty_white_str))
-    print('Chessboard - empty black - TTF')
-    print(str2ttf(empty_black_str))
+    print('Chessboard - White - chess.Board')
+    print(board2str(chess.Board()))
 
-    print('-------------------------------------')
-    print('Chessboard - white')
-    print('empty chess.Board')
-    board = chess.Board()
-    print(board2arr(board))
-    print('Chessboard - white - FEN')
+    print('Chessboard - White - FEN')
     print('FEN: r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4')
     board = chess.Board(
         'r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4')
-    print(board2arr(board))
+    print(board2str(board))
+    
+    print('Chessboard - White - FEN --> TTF')
+    print(board2ttf(board))
 
 
 if __name__ == '__main__':
