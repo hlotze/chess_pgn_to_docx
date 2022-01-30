@@ -38,7 +38,6 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
   - [ ] documentation
 - [ ] evtl. refactor coding to get aligned to [`python-chess`](https://python-chess.readthedocs.io/en/latest/) naming conventions and structures
 
-
 ## Contact
 [@hlotze](https://github.com/hlotze)
 
