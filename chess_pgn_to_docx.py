@@ -50,6 +50,7 @@ for fn in file_names_list:
                         one_game_dict['Site']  + '_( ' + \
                         one_game_dict['White'] + ' - ' + \
                         one_game_dict['Black'] + ' ).docx'
+            fn = fn.replace('??','_')
             
             ret_dict = pgn.store_document(my_doc, fn)
             print('stored:', ret_dict['file_name'])

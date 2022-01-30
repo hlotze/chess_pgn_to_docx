@@ -320,11 +320,12 @@ def main():
 
         my_doc = gen_document_from_game(one_game_dict)
 
-        fn = 'DOCX/TEST/' + one_game_dict['Date'].replace('.','-')  + '_' + \
-                            one_game_dict['Event'] + '_' + \
-                            one_game_dict['Site']  + '_( ' + \
-                            one_game_dict['White'] + ' - ' + \
-                            one_game_dict['Black'] + ' ).docx'
+        fn = 'DOCX/' + one_game_dict['Date'].replace('.','-')  + '_' + \
+                    one_game_dict['Event'] + '_' + \
+                    one_game_dict['Site']  + '_( ' + \
+                    one_game_dict['White'] + ' - ' + \
+                    one_game_dict['Black'] + ' ).docx'
+        fn = fn.replace('??','_')
         
         # store document
         ret_dict = store_document(my_doc, fn)

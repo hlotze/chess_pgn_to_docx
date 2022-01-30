@@ -16,7 +16,7 @@ For online studies a good starting point learning chess is [lichess.org](https:/
 This approach provides a printout in B/W with more contrast as the colored PDFs at [lichess_puzzles_to_pdf](https://github.com/hlotze/lichess_puzzles_to_pdf).
 
 ## Steps
-- install the True Type Font (TTF) Chess Merida ono your system; see `TTF/`
+- install the True Type Font (TTF) Chess Merida onto your system; see `TTF/`
 - check 
   - the PGN[^1] examples; see `PGN/`
   - the DOCX examples; see `DOCX/`
@@ -26,7 +26,7 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
 ## Open item
 - [x] finitalize the project - initially done
 - [x] add unit tests - initially done, to be completed
-- [ ] fix problems with file names if *Seven Tag Roster* (details at [^1]) is incomplete, e.g. with older games
+- [x] fix problems with file names if *Seven Tag Roster* (details at [^1]) is incomplete, e.g. with older games
 - [ ] add some word's about the game's ECO[^2]
 - [ ] mark a checked king at the diagrams
 - [ ] mark the from- and to-squares of a half move
