@@ -1,12 +1,12 @@
 # Chess PGN to Docx
 
 ## What this site provides 
-- a script `chess_pgn_to_docx.py`  that generates one `DOCX` file from one chess PGN[^1] match, with a chessboard for each half move, using True Type Font Chess Merida. 
+- a script `chess_pgn_to_docx.py`  that generates one DOCX file from one chess PGN[^1] match, with a chessboard for each half move, using True Type Font Chess Merida. 
   - ensure that you installed the TTF[^5] Chess Merida, which is given e.g. at `TTF/` directory.
   - the script processes all `*.pgn` files that it find at `PGN/` directory.
-  - be aware, a `PGN` file can have tousends of games inside, and with this script each of its games will get a DOCX file in `DOCX/` directory
+  - be aware, a PGN file can have thousends of games inside, and with this script each of its games will get a DOCX file in `DOCX/` directory
   - each game's DOCX generation take about 1 second (on my old machine.)
-  - the script was not possible without [python chess](https://github.com/niklasf/python-chess) and [python docx](https://github.com/python-openxml/python-docx)
+  - the script was not possible without [`python chess`](https://github.com/niklasf/python-chess) and [`python docx`](https://github.com/python-openxml/python-docx)
 
 ## My intention
 ... was to support myself learning chess by studying chess games offline form selected PGN printouts.
