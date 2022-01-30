@@ -1,0 +1,116 @@
+[Event "Breslau"]
+[Site "Breslau"]
+[Date "1879.??.??"]
+[Round "?"]
+[White "Tarrasch, Siegbert"]
+[Black "Mendelsohn, J."]
+[Result "1-0"]
+[WhiteElo ""]
+[BlackElo ""]
+[ECO "C49"]
+
+1.e4 e5 2.Nf3 Nc6 3.Nc3 Nf6 4.Bb5 Bb4 5.Nd5 Nxd5 6.exd5 Nd4 7.Ba4 b5 8.Nxd4 bxa4
+9.Nf3 O-O 10.O-O d6 11.c3 Bc5 12.d4 exd4 13.Nxd4 Ba6 14.Re1 Bc4 15.Nc6 Qf6
+16.Be3 Rfe8 17.Bxc5 Rxe1+ 18.Qxe1 dxc5 19.Qe4 Bb5 20.d6 Kf8 21.Ne7 Re8 22.Qxh7 Qxd6
+23.Re1 Be2 24.Nf5  1-0
+
+[Event "Breslau"]
+[Site "Breslau"]
+[Date "1879.??.??"]
+[Round "?"]
+[White "Tarrasch, Siegbert"]
+[Black "Mannheimer, Nathan"]
+[Result "1-0"]
+[WhiteElo ""]
+[BlackElo ""]
+[ECO "C42"]
+
+1.e4 e5 2.Nf3 Nf6 3.Nxe5 d6 4.Nf3 Nxe4 5.d4 Be7 6.Bd3 Nf6 7.O-O O-O 8.Nc3 Bg4
+9.h3 Bh5 10.g4 Bg6 11.Nh4 Bxd3 12.Qxd3 Nxg4 13.Nf5 Nf6 14.Kh1 Nc6 15.Rg1 Ne8
+16.Nxg7 Kh8 17.Bh6 Bf6 18.Ne6 fxe6 19.Bxf8 Ng7 20.Bxg7+ Bxg7 21.Rg4 Qe7 22.Rag1 Bh6
+23.Qg3 Qf7 24.Qh4 Bd2 25.Ne4 Qf3+ 26.Kh2 Ba5 27.Qxh7+ Kxh7 28.Rh4+  1-0
+
+[Event "Breslau"]
+[Site "Breslau"]
+[Date "1879.??.??"]
+[Round "?"]
+[White "Tarrasch, Siegbert"]
+[Black "Mendelsohn, J."]
+[Result "1-0"]
+[WhiteElo ""]
+[BlackElo ""]
+[ECO "C51"]
+
+1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.b4 Bxb4 5.c3 Bc5 6.O-O d6 7.d4 exd4 8.cxd4 Bb6
+9.d5 Na5 10.Bb2 Ne7 11.Bd3 O-O 12.Nc3 Ng6 13.Ne2 c5 14.Kh1 Bc7 15.Nfg1 Rb8
+16.f4 f5 17.exf5 Bxf5 18.Bxf5 Rxf5 19.g4 Rf7 20.f5 Ne5 21.Nf4 Nac4 22.Bxe5 Nxe5
+23.Nf3 Nxg4 24.Ne6 Qf6 25.Nfg5 Ne3 26.Qh5 g6 27.Qh6 Ng4 28.Qh3 Nf2+ 29.Rxf2 Qxa1+
+30.Rf1 Qf6 31.Nxf7 Qxf7 32.fxg6 Qe7 33.Rf7  1-0
+
+[Event "Breslau"]
+[Site "Breslau"]
+[Date "1879.??.??"]
+[Round "?"]
+[White "Tarrasch, Siegbert"]
+[Black "Mannheimer, Nathan"]
+[Result "1-0"]
+[WhiteElo ""]
+[BlackElo ""]
+[ECO "C39"]
+
+1.e4 e5 2.f4 exf4 3.Nf3 g5 4.h4 g4 5.Ne5 h5 6.Bc4 Rh7 7.d4 d6 8.Nd3 f3 9.gxf3 Be7
+10.Be3 Bxh4+ 11.Kd2 Bg5 12.f4 Bf6 13.Nc3 Nc6 14.Qg1 Na5 15.Bb3 Nxb3+ 16.axb3 b6
+17.Re1 Kf8 18.f5 Bg5 19.Nf4 Bxf4 20.Bxf4 f6 21.Bg3 Bb7 22.d5 Bc8 23.Ne2 Bd7
+24.Nf4 Qe8 25.Ne6+ Bxe6 26.fxe6 Qg6 27.Qd4 Qg5+ 28.Kd1 h4 29.Ref1 Rh5 30.Rf5 Qg6
+31.Rxh5 Qxh5 32.Rxh4 Qg5 33.Rh7 b5 34.Qb4 Ne7 35.Rf7+ Ke8 36.Qxb5+ c6 37.Qb7  1-0
+
+[Event "Breslau"]
+[Site "Breslau"]
+[Date "1879.??.??"]
+[Round "?"]
+[White "Tarrasch, Siegbert"]
+[Black "Schottlaender, Adolf"]
+[Result "1-0"]
+[WhiteElo ""]
+[BlackElo ""]
+[ECO "C80"]
+
+1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Nxe4 6.d4 b5 7.Bb3 d5 8.Nxe5 Nxe5
+9.dxe5 Be6 10.Be3 Bc5 11.Bxc5 Nxc5 12.Nc3 c6 13.f4 g6 14.Qf3 O-O 15.Rad1 f6
+16.Qe3 Qe7 17.exf6 Rxf6 18.Bxd5 Ra7 19.Bxc6 Bc4 20.Bd5+ Bxd5 21.Qxe7 Rxe7
+22.Nxd5  1-0
+
+[Event "Breslau"]
+[Site "Breslau"]
+[Date "1879.??.??"]
+[Round "?"]
+[White "Tarrasch, Siegbert"]
+[Black "Riemann, Fritz"]
+[Result "0-1"]
+[WhiteElo ""]
+[BlackElo ""]
+[ECO "C67"]
+
+1.e4 e5 2.Nf3 Nc6 3.Bb5 Nf6 4.O-O Nxe4 5.d4 Be7 6.Qe2 Nd6 7.Bxc6 bxc6 8.dxe5 Nf5
+9.g4 Nh4 10.Nxh4 Bxh4 11.f4 Be7 12.f5 d5 13.f6 Bc5+ 14.Be3 Bxe3+ 15.Qxe3 gxf6
+16.exf6+ Be6 17.Kh1 Rg8 18.g5 d4  0-1
+
+[Event "Breslau"]
+[Site "Breslau"]
+[Date "1879.??.??"]
+[Round "?"]
+[White "Mendelsohn, J."]
+[Black "Tarrasch, Siegbert"]
+[Result "0-1"]
+[WhiteElo ""]
+[BlackElo ""]
+[ECO "C51"]
+
+1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.b4 Bxb4 5.c3 Bc5 6.O-O d6 7.d4 exd4 8.cxd4 Bb6
+9.d5 Na5 10.Bb2 Ne7 11.Bd3 O-O 12.Nc3 Ng6 13.Ne2 c5 14.Ng3 f6 15.Kh1 Ne5
+16.Bxe5 fxe5 17.Qd2 Rb8 18.Rg1 Bc7 19.Nf5 b5 20.Ng5 c4 21.Bc2 c3 22.Qc1 Bb6
+23.Ne6 Bxe6 24.dxe6 Qf6 25.e7 Rf7 26.g4 Rxe7 27.g5 Qe6 28.Nxe7+ Qxe7 29.Rg2 Kh8
+30.f4 Nc4 31.f5 Be3 32.Qf1 Bxg5 33.Qd3 Ne3 34.Rg3 Nxc2 35.Qxc2 b4 36.Rag1 h6
+37.Qg2 a5 38.Qh3 c2 39.f6 Qxf6 40.Rf3 Qe7 41.Rff1 Qc7 42.Rxg5 c1=Q 43.Rxc1 Qxc1+
+44.Rg1 Qc2 45.Qg4 Rg8 46.Qg6 Qxa2  0-1
+

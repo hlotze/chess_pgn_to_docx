@@ -1,9 +1,8 @@
-import codecs
+#import codecs
 import io
 import os
 import re
 import sys
-
 
 import chess
 import chess.pgn
@@ -12,12 +11,9 @@ import pandas as pd
 from docx import Document
 from docx.enum.text import WD_LINE_SPACING, WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement, ns
-from docx.shared import Pt
+from docx.shared import Inches, Mm, Pt
 
 import chessboard as cb
-
-#from docx.oxml.ns import nsdecls
-
 
 
 def get_pgnfile_names_from_dir(dir='PGN', ext='.pgn')->list:
@@ -46,6 +42,7 @@ def get_games_from_pgnfile(file_name:str)->pd.DataFrame:
         game_dict['file'] = file_name
         games_df = games_df.append(game_dict, ignore_index=True)
     return(games_df)
+
 
 def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
     """Return at each row full move info: W & B SAN string and W & B TTF board string"""
@@ -118,14 +115,27 @@ def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
     return(full_moves_df)    
 
 
-
 def gen_document_from_game(game_dict: dict)->Document:
-
+    """Return a docx.Document Din A4 with the chess diagrams for a given game_dict"""
     doc = Document()
 
-    header = doc.sections[0].header
+    #  set to A4 --------------------------------------
+    # see
+    #   https://stackoverflow.com/questions/43724030/how-to-change-page-size-to-a4-in-python-docx
+    section = doc.sections[0]
+    section.page_height = Mm(297)
+    section.page_width = Mm(210)
+    section.left_margin = Mm(30)
+    section.right_margin = Mm(25)
+    section.top_margin = Mm(30)
+    section.bottom_margin = Mm(15)
+    section.header_distance = Mm(15)
+    section.footer_distance = Mm(10)
+    #  set to A4 --------------------------------------
 
-    # header
+    # doc header --------------------------------------
+    header = doc.sections[0].header
+    header.bottom_margin = Inches(0.2)
     head = header.paragraphs[0]
     head.text = '{Date} {Event}, {Site}\n{White} vs. {Black}   {Result}'.\
         format(Event=game_dict['Event'], \
@@ -134,8 +144,9 @@ def gen_document_from_game(game_dict: dict)->Document:
                White=game_dict['White'], \
                Black=game_dict['Black'], \
                Result=game_dict['Result'])
+    # doc header --------------------------------------
 
-    # footer: just the running page number
+    # doc footer --------------------------------------
     def create_element(name):
         return(OxmlElement(name))
 
@@ -145,6 +156,7 @@ def gen_document_from_game(game_dict: dict)->Document:
     # taken from
     #   https://stackoverflow.com/questions/56658872/add-page-number-using-python-docx/62534711#62534711
     def add_page_number(paragraph):
+        
         # paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 
         page_run = paragraph.add_run()
@@ -192,9 +204,9 @@ def gen_document_from_game(game_dict: dict)->Document:
 
     add_page_number(doc.sections[0].footer.paragraphs[0]) #.add_run())
     doc.sections[0].footer.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
-    
+    #  doc footer --------------------------------------
+
     # just the first page of the booklet
-    #print(game_dict.keys())
     out_str = ''
     for key in game_dict.keys():
         if 'file' != key and 'pgn' != key:
@@ -203,50 +215,20 @@ def gen_document_from_game(game_dict: dict)->Document:
     out_str = out_str + '{pgn}  {res}\n'.format(pgn=game_dict['pgn'], res=game_dict['Result'])
     doc.add_paragraph(out_str)
 
-    # doc.add_heading('{file}'.format(file=game_dict['file']), 0)
-    # doc.add_paragraph('Event: {Event} - Site: {Site} - Date: {Date}'.\
-    #     format(Event=game_dict['Event'], \
-    #            Site=game_dict['Site'], \
-    #            Date=game_dict['Date']))
-    # doc.add_paragraph('{White} vs. {Black}   {Result}'.\
-    #     format(White=game_dict['White'], \
-    #            Black=game_dict['Black'], \
-    #            Result=game_dict['Result']))
-
     # TODO see https://www3.diism.unisi.it/~addabbo/ECO_aperture_scacchi.html
     if 'ECO' in game_dict.keys():
         doc.add_paragraph('{ECO}'.format(ECO=game_dict['ECO']))
         # some words about the game's ECO
         doc.add_paragraph('some words about the game\'s ECO')
-    
-    # chess move list - as a table
-    # dropped 
-    #   just provide the PGN at 1st page 
-    #
-    # mv_list = [hm.split(' ') for hm in [mv.rstrip() for mv in re.split('\d*\. ', game_dict['pgn'])[1:]]]
-    # mv_tbl = doc.add_table(len(mv_list)+1,3)
-    # mv_row = mv_tbl.rows[0]
-    # mv_row.cells[1].text = game_dict['White']
-    # mv_row.cells[2].text = game_dict['Black']
-    # for i in range(len(mv_list)):
-    #     mv_row = mv_tbl.rows[i+1]
-    #     mv_row.cells[0].text = str(i+1)+'.'
-    #     mv_row.cells[1].text = mv_list[i][0]
-    #     mv_row.cells[2].text = mv_list[i][1]
 
     doc.add_page_break()
 
-    # the PGN digagrams
-
+    #  PGN diagramms --------------------------------------
     # the PGN data for diagram genration
     boards_df = prep_ttfboards_from_pgn(game_dict['pgn'])
     
     boards_tbl = doc.add_table(2*len(boards_df), 2)
     for ix, fmv in boards_df.iterrows():
-        # now the digrams 3 full move diagrams at each page
-        #if 0 == ix % 6:
-        #    doc.add_page_break()
-
 
         brd_row = boards_tbl.rows[2*ix]
         
@@ -285,11 +267,8 @@ def gen_document_from_game(game_dict: dict)->Document:
         brd_row.cells[1].text = fmv['b_hmv_str']
         brd_row.cells[1].paragraphs[0].style.font.name = 'Verdana'
         brd_row.cells[1].paragraphs[0].paragraph_format.space_after = Pt(0)
-
-
-
+    #  PGN diagramms --------------------------------------        
     return(doc)
-
 
 
 def get_incremented_filename(filename:str)->str:
@@ -318,8 +297,14 @@ def store_document(doc: Document, file_name: str)-> str:
 
 
 def main():
-
-    # for development just use test.pgn with 5 games
+    ##################################################
+    # for development just use 
+    #   'PGN/TEST/test_do_not_change.pgn' with 5 games
+    # and only its last pgn to generate one document
+    # with the diagrams, at
+    #   'DOCX/TEST'
+    # (you have to run this 'pgn.py')
+    ##################################################
     fn = get_pgnfile_names_from_dir(dir='PGN/TEST')[0]
 
     try:
