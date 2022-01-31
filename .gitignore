@@ -7,3 +7,4 @@ requirements_conda.txt
 requirements_pip.txt
 DOCX/TEST/2001*
 eco_pgn2csv.py
+README copy.md
