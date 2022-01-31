@@ -16,7 +16,7 @@ For online studies a good starting point learning chess is [lichess.org](https:/
 This approach provides a printout in B/W with more contrast as the colored PDFs at [lichess_puzzles_to_pdf](https://github.com/hlotze/lichess_puzzles_to_pdf).
 
 ## Steps
-- install the True Type Font (TTF) Chess Merida onto your system; see `TTF/`
+- install the True Type Font (TTF) Chess Merida onto your system; see `TTF/`; created documents checked with Windows Microsoft Word (365) and Ubuntu LibreOffice, but actually not possible to install Chess Merida at IPad :-(
 - check 
   - the PGN[^1] examples; see `PGN/`
   - the DOCX examples; see `DOCX/`
