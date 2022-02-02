@@ -9,13 +9,6 @@
 # (you have to run this 'pgn.py')
 ##################################################
 
-import io
-import os
-import re
-import sys
-
-import chess
-#import chess.pgn
 import numpy as np
 import pandas as pd
 from docx import Document
@@ -25,6 +18,7 @@ from docx.shared import Inches, Mm, Pt
 
 #import chessboard as cb
 import pgn as pgn
+import eco as eco
 
 file_names_list = pgn.get_pgnfile_names_from_dir(dir='PGN')
 
@@ -40,7 +34,13 @@ for fn in file_names_list:
         for ix in range(len(games_df)):
             one_game_dict = games_df.iloc[ix].to_dict()
 
-            my_doc = pgn.gen_document_from_game(one_game_dict)
+            eco_result_dict = {}
+            if 'ECO' in one_game_dict.keys():
+                eco_result_dict = eco.get_eco_data_for(eco=one_game_dict['ECO'], pgn=one_game_dict['pgn'])
+            else:
+                eco_result_dict = eco.get_eco_data_for(eco='', pgn=one_game_dict['pgn'])
+
+            my_doc = pgn.gen_document_from_game(one_game_dict, eco_result_dict)
             
             # fn fix for lichess pgn files
             event = one_game_dict['Event'].replace(

@@ -2,13 +2,12 @@
 import io
 import os
 import re
-#import sys
+import warnings
 
 import chess
 import chess.pgn
 import numpy as np
 
-import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 import pandas as pd
@@ -18,6 +17,7 @@ from docx.oxml import OxmlElement, ns
 from docx.shared import Inches, Mm, Pt
 
 import chessboard as cb
+import eco as eco
 
 
 def get_pgnfile_names_from_dir(dir='PGN', ext='.pgn')->list:
@@ -119,7 +119,7 @@ def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
     return(full_moves_df)    
 
 
-def gen_document_from_game(game_dict: dict)->Document:
+def gen_document_from_game(game_dict: dict, eco_dict: dict)->Document:
     """Return a docx.Document Din A4 with the chess diagrams for a given game_dict"""
     doc = Document()
 
@@ -155,7 +155,7 @@ def gen_document_from_game(game_dict: dict)->Document:
         return(OxmlElement(name))
 
     def create_attribute(element, name, value):
-        element.set(ns.qn(name), value)
+        return(element.set(ns.qn(name), value))
 
     # taken from
     #   https://stackoverflow.com/questions/56658872/add-page-number-using-python-docx/62534711#62534711
@@ -206,11 +206,11 @@ def gen_document_from_game(game_dict: dict)->Document:
         num_pages_run._r.append(instrText2)
         num_pages_run._r.append(fldChar4)
 
-    add_page_number(doc.sections[0].footer.paragraphs[0]) #.add_run())
+    add_page_number(doc.sections[0].footer.paragraphs[0])
     doc.sections[0].footer.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
     #  doc footer --------------------------------------
 
-    # just the first page of the booklet
+    # first page of the booklet
     out_str = ''
     for key in game_dict.keys():
         if 'file' != key and 'pgn' != key:
@@ -219,11 +219,42 @@ def gen_document_from_game(game_dict: dict)->Document:
     out_str = out_str + '{pgn}  {res}\n'.format(pgn=game_dict['pgn'], res=game_dict['Result'])
     doc.add_paragraph(out_str)
 
-    # TODO see https://www3.diism.unisi.it/~addabbo/ECO_aperture_scacchi.html
-    if 'ECO' in game_dict.keys():
-        doc.add_paragraph('{ECO}'.format(ECO=game_dict['ECO']))
-        # some words about the game's ECO
-        doc.add_paragraph('some words about the game\'s ECO')
+    # some words about the game's ECO
+    if not eco_dict:
+        # no eco section to print, e.g no eco found
+        pass
+    else:
+        if not('eco' in eco_dict.keys()):
+            # no eco section to print, e.g no eco found
+            pass
+        else:
+            e = eco_dict['eco'][0]
+            eco_txt = '{e} - {group}\n{eco} - {subgroup} \n{variant} \n{pgn} \n'.format( \
+                                        e=e,
+                                        group=eco_dict['group'],
+                                        eco=eco_dict['eco'],  
+                                        subgroup=eco_dict['subgroup'].replace('?',''), 
+                                        variant=eco_dict['variant'].replace('?',''), 
+                                        pgn=eco_dict['pgn'])
+            doc.add_paragraph(eco_txt)
+            
+            eco_board = chess.Board(eco_dict['fen'])
+            eco_tbl = doc.add_table(2, 1)
+            eco_row = eco_tbl.rows[0]
+            eco_row.cells[0].text = cb.board2ttf(eco_board)[:-1]
+            eco_cell_paragraph = eco_row.cells[0].paragraphs[0]
+            eco_cell_paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+            eco_cell_paragraph.paragraph_format.keep_with_next = True
+            eco_cell_paragraph.paragraph_format.space_before = Pt(0)
+            eco_cell_paragraph.paragraph_format.space_after = Pt(0)
+            eco_run = eco_cell_paragraph.runs
+            eco_fnt = eco_run[0].font
+            eco_fnt.name = 'Chess Merida'
+            eco_fnt.size = Pt(20)
+            eco_row = eco_tbl.rows[1]
+            eco_row.cells[0].text = eco_dict['mv']
+            eco_row.cells[0].paragraphs[0].style.font.name = 'Verdana'
+            eco_row.cells[0].paragraphs[0].paragraph_format.space_after = Pt(0)
 
     doc.add_page_break()
 
@@ -236,6 +267,23 @@ def gen_document_from_game(game_dict: dict)->Document:
 
         brd_row = boards_tbl.rows[2*ix]
         
+        #########################################################
+        # TODO: 
+        # At fmv['w_board_ttf'] tht from-/to- 
+        # and check squares needs to be marked
+        # therefore a paragraph needs to be split into 
+        # mutiple runs, e.g.
+        #   standard portion 
+        #   checked - with its own text & text.font.color
+        #   standard portion 
+        #   from square - with its own text & bachground color
+        #   standard portion 
+        #   to square - with its own text & bachground color
+        #   standard portion 
+        # see python-docx.readthedocs.io -> Run objects class docx.text.run.Run
+        #   or text.html#docx.text.paragraph.add_run
+        #########################################################
+
         # the board diagrams
         brd_row.cells[0].text = fmv['w_board_ttf'][:-1]
         brd_cell_paragraph = brd_row.cells[0].paragraphs[0]
@@ -319,16 +367,27 @@ def main():
         # start to get the games out of one pgn file
         games_df = get_games_from_pgnfile(fn)
 
-        one_game_dict = games_df.iloc[-1].to_dict()
-        #print(one_game_dict)
+        one_game_dict = games_df.iloc[1].to_dict()
+        
+        eco_result_dict = {}
+        if 'ECO' in one_game_dict.keys():
+            eco_result_dict = eco.get_eco_data_for(eco=one_game_dict['ECO'], pgn=one_game_dict['pgn'])
+        else:
+            eco_result_dict = eco.get_eco_data_for(eco='', pgn=one_game_dict['pgn'])
 
-        my_doc = gen_document_from_game(one_game_dict)
+        my_doc = gen_document_from_game(one_game_dict, eco_result_dict)
 
-        fn = 'DOCX/' + one_game_dict['Date'].replace('.','-')  + '_' + \
-                    one_game_dict['Event'] + '_' + \
-                    one_game_dict['Site']  + '_( ' + \
-                    one_game_dict['White'] + ' - ' + \
-                    one_game_dict['Black'] + ' ).docx'
+        # fn fix for lichess pgn files
+        event = one_game_dict['Event'].replace(
+            '/', '_').replace(':', '_').replace('.', '-')
+        site = one_game_dict['Site'].replace(
+            '/', '_').replace(':', '_').replace('.', '-')
+        
+        fn = 'DOCX/TEST/' + one_game_dict['Date'].replace('.', '-') + '_' + \
+                            event + '_' + \
+                            site + '_( ' + \
+                            one_game_dict['White'] + ' - ' + \
+                            one_game_dict['Black'] + ' ).docx'
         fn = fn.replace('??','_')
         
         # store document
@@ -343,19 +402,6 @@ def main():
     return()
 
 
-
-
-# def main():
-#     # at least one pgn-file should be in this dir
-#     print(get_pgnfile_names_from_dir(dir='PGN/TEST'))
-    
-#     games_df = pd.DataFrame()
-#     for fn in get_pgnfile_names_from_dir(dir='PGN/TEST'):
-#         games_df = games_df.append(get_games_from_pgnfile(fn))
-#         #print(games_df.tail(3))
-#     print('\nnow only the last PGN game as dict:')
-#     print(games_df.iloc[-1].to_dict())
-#     return()
 
 if __name__ == '__main__':
     main()
