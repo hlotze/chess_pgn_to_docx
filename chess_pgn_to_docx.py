@@ -1,8 +1,7 @@
 
 
-
 ##################################################
-# for development just use 
+# for development just use
 #   'PGN/TEST/test_do_not_change.pgn' with 5 games
 # and only its last pgn to generate one document
 # with the diagrams, at
@@ -27,8 +26,6 @@ from docx.shared import Inches, Mm, Pt
 #import chessboard as cb
 import pgn as pgn
 
-
-
 file_names_list = pgn.get_pgnfile_names_from_dir(dir='PGN')
 
 for fn in file_names_list:
@@ -44,14 +41,20 @@ for fn in file_names_list:
             one_game_dict = games_df.iloc[ix].to_dict()
 
             my_doc = pgn.gen_document_from_game(one_game_dict)
-
-            fn = 'DOCX/' + one_game_dict['Date'].replace('.','-')  + '_' + \
-                        one_game_dict['Event'] + '_' + \
-                        one_game_dict['Site']  + '_( ' + \
-                        one_game_dict['White'] + ' - ' + \
-                        one_game_dict['Black'] + ' ).docx'
-            fn = fn.replace('??','_')
             
+            # fn fix for lichess pgn files
+            event = one_game_dict['Event'].replace(
+                '/', '_').replace(':', '_').replace('.', '-')
+            site = one_game_dict['Site'].replace(
+                '/', '_').replace(':', '_').replace('.', '-')
+            
+            fn = 'DOCX/' + one_game_dict['Date'].replace('.', '-') + '_' + \
+                event + '_' + \
+                site + '_( ' + \
+                one_game_dict['White'] + ' - ' + \
+                one_game_dict['Black'] + ' ).docx'
+            fn = fn.replace('??', '_')
+
             ret_dict = pgn.store_document(my_doc, fn)
             print('stored:', ret_dict['file_name'])
 

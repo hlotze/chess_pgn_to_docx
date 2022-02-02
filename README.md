@@ -28,13 +28,15 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
 ## Open item
 - [x] finitalize the project - initially done
 - [x] add unit tests - initially done, to be completed
-- [x] fix problems with file names if *Seven Tag Roster* (details at [^1]) is incomplete, e.g. with older games
+- [] fix problems with file names 
+  - [x] if *Seven Tag Roster* (details at [^1]) is incomplete, e.g. with older games
+  - [ ] if Site tag is a web address, e.g. 'https://lichess.org. As file names can not have a ':' or '/'  at Windows
 - [ ] add some word's about the game's ECO[^2]
 - [ ] mark a checked king at the diagrams
 - [ ] mark the from- and to-squares of a half move
 - [ ] add [%eval ...] comments [^3] to the SAN[^4] at bottom of a board
 - [ ] add 
-  - [ ] env requirements
+  - [x] env requirements
   - [ ] tests
   - [ ] packageing
   - [ ] documentation
