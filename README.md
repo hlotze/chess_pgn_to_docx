@@ -30,7 +30,7 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
 - [x] add unit tests - initially done, to be completed
 - [] fix problems with file names 
   - [x] if *Seven Tag Roster* (details at [^1]) is incomplete, e.g. with older games
-  - [ ] if Site tag is a web address, e.g. 'https://lichess.org. As file names can not have a ':' or '/'  at Windows
+  - [x] if Site tag is a web address, e.g. 'https://lichess.org. As file names can not have a ':' or '/'  at Windows
 - [ ] add some word's about the game's ECO[^2]
 - [ ] mark a checked king at the diagrams
 - [ ] mark the from- and to-squares of a half move
