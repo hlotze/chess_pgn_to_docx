@@ -1,7 +1,7 @@
 # Chess PGN to Docx
 
 ## What this site provides 
-- a script `chess_pgn_to_docx.py`  that generates one DOCX file from one chess PGN[^1] match, with a chessboard for each half move, using True Type Font Chess Merida. 
+- a script `chess_pgn_to_docx.py`  that generates one DOCX file from one chess PGN[^1] match, with a chessboard for each half move, using True Type Font Chess Merida, i.e. 3 full moves / Din A4 page. 
   - ensure that you installed the TTF[^5] Chess Merida, which is given e.g. at `TTF/` directory.
   - the script processes all `*.pgn` files that it find at `PGN/` directory.
   - be aware, a PGN file can have thousends of games inside, and with this script each of its games will get a DOCX file in `DOCX/` directory
@@ -10,19 +10,17 @@
 
 ## My intention
 ... was to support myself learning chess by studying chess games offline form selected PGN printouts.
-
 For online studies a good starting point learning chess is [lichess.org](https://lichess.org/) or others.
-
 This approach provides a printout in B/W with more contrast as the colored PDFs at [lichess_puzzles_to_pdf](https://github.com/hlotze/lichess_puzzles_to_pdf).
 
 ## Steps
-- ***install the True Type Font (TTF) Chess Merida onto your system; see `TTF/`; documents created and checked with Windows Microsoft Word (365) and Ubuntu LibreOffice (v6.4.7.2), but actually not possible to install Chess Merida at iPad :-(***
+- **install the True Type Font (TTF) Chess Merida onto your system; see `TTF/`; documents created and checked with Windows Microsoft Word (365) and Ubuntu LibreOffice (v6.4.7.2), but actually not possible to install Chess Merida at iPad &#128542; so some examples added at DOCX/PDF/*.pdf**
   - TTF at Windows: just double-click the file *.ttf and press the Install button 
   - TTF at Ubuntu: see [askubuntu](https://askubuntu.com/questions/3697/how-do-i-install-fonts)
 - check 
   - the PGN[^1] examples; see `PGN/`
   - the DOCX examples; see `DOCX/`
-  - your env: needed imports are listed within the script, env. req. will be provided soon
+  - requirements.txt for the venv
 - run the Python script `chess_pgn_to_docx.py`
 
 ## Open item
@@ -30,14 +28,13 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
 - [x] add unit tests - initially done, to be completed
 - [x] fix problems with file names 
   - [x] if *Seven Tag Roster* (details at [^1]) is incomplete, e.g. with older games
-  - [x] if Site tag is a web address, e.g. https://lichess.org. As file names can not have a ':' or '/'  at Windows
-- [x] add some word's about the game's ECO[^2]
+  - [x] if Site tag is a web address, e.g. https://lichess.org, as file names can not have a ':' or '/'
+- [x] add the game's ECO[^2] incl. diagram
 - [ ] mark a checked king at the diagrams
 - [ ] mark the from- and to-squares of a half move
 - [ ] add [%eval ...] comments [^3] to the SAN[^4] at bottom of a board
 - [ ] add 
-  - [x] env requirements
-  - [ ] tests
+  - [x] venv requirements
   - [ ] packageing
   - [ ] documentation
 - [ ] evtl. refactor coding to get aligned to [`python-chess`](https://python-chess.readthedocs.io/en/latest/) naming conventions and structures
