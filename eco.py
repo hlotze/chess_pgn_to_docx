@@ -1,4 +1,4 @@
-import copy
+#import copy
 import io
 
 import chess.pgn
@@ -9,21 +9,10 @@ import pandas as pd
 #   see https://www3.diism.unisi.it/~addabbo/ECO_aperture_scacchi.html
 #
 # as a pd.DataFrame: eco_df
-try:
-    # check if file exists
-    f = open('eco.csv', 'r')
-    f.close
-
-    eco_df = pd.read_csv('eco.csv',
-                        sep=',',
-                        header=0)
-
-except IOError:
-    print("File not accessible: ", 'eco.csv')
-
-finally:
-    f.close()
-
+eco_df = pd.read_csv('eco.zip',
+                     sep=',',
+                     header=0,
+                     compression={'method': 'zip'})
 # 'eco_df' provides the ECO data
 #####################################
 
@@ -40,7 +29,7 @@ eco_test_data_dict = {
             'Rxd4 32.Ne2 Ra4 33.Ke1 Rxa3 34.Rab1 Bb4+ 35.Kf1 Rd3  0-1'}
 
 def normalize_pgn_string(pgn:str) -> str:
-    """Return form a pgn string a normalized pgn string, e.g. '1.g4 d5 2.Bg2 c6' will be normalized to '1. g4 d5 2. Bg2 c6'"""
+    """Return a normalized pgn string, e.g. '1.g4 d5 2.Bg2 c6' will be normalized to '1. g4 d5 2. Bg2 c6'"""
     game = chess.pgn.read_game(io.StringIO(pgn))
     normed_pgn_str = game.board().variation_san(game.mainline_moves())
     return(normed_pgn_str)
@@ -49,28 +38,26 @@ def get_eco_data_for(eco='', pgn='') -> dict:
     # normalize the pgn string
     pgn = normalize_pgn_string(pgn)
 
-    # do we have a eco code
+    eco_dict = {}
+    # do we have an ECO code
     if '' != eco:
         # get all entries from pgn.eco_df
         # that fits to given eco_code
         eco_data_df = eco_df[eco == eco_df['eco']].copy()
-    else:
-        eco_data_df = eco_df.copy()
+        res_df = eco_data_df.sort_values('pgn', ascending=False).copy()
+        for _, row in res_df.iterrows():
+            #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
+            if row['pgn'] == pgn[:len(row['pgn'])]:
+                eco_dict = row.to_dict()
+                break     
 
-    res_df = eco_data_df.sort_values('pgn', ascending=False).copy()
-    eco_dict = {}
-    for index, row in res_df.iterrows():
-        #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
-        if row['pgn'] == pgn[:len(row['pgn'])]:
-            eco_dict = row.to_dict()
-            break
-
+    # if no ECO available or given ECO is wrong 
+    # and no related ECO data found
+    # do it again and check with complete database
     if not bool(eco_dict):
-        # no eco found, e.g. if wrong ECO from PGN was given
-        # again check game's pgn against the complete eco data
         eco_data_df = eco_df.copy()
         res_df = eco_data_df.sort_values('pgn', ascending=False).copy()
-        for index, row in res_df.iterrows():
+        for _, row in res_df.iterrows():
             #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
             if row['pgn'] == pgn[:len(row['pgn'])]:
                 eco_dict = row.to_dict()
