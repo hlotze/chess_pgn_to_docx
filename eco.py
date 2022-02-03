@@ -1,5 +1,6 @@
-#import copy
+
 import io
+import sys
 
 import chess.pgn
 import pandas as pd
@@ -34,36 +35,42 @@ def normalize_pgn_string(pgn:str) -> str:
     normed_pgn_str = game.board().variation_san(game.mainline_moves())
     return(normed_pgn_str)
 
-def get_eco_data_for(eco='', pgn='') -> dict:
+def get_eco_data_for(eco=None, pgn=None) -> dict:
+    """Return the ECO data for the given ECO and PGN, even if ECO is wrong or missing"""
+    if eco is None:
+        eco = ''
+    if pgn is None:
+        sys.exit("error: no pgn given at 'get_eco_data_for()'")
+    
     # normalize the pgn string
     pgn = normalize_pgn_string(pgn)
 
-    eco_dict = {}
+    found_eco_dict = {}
     # do we have an ECO code
     if '' != eco:
         # get all entries from pgn.eco_df
         # that fits to given eco_code
-        eco_data_df = eco_df[eco == eco_df['eco']].copy()
-        res_df = eco_data_df.sort_values('pgn', ascending=False).copy()
-        for _, row in res_df.iterrows():
+        filtered_eco_data_df = eco_df[eco == eco_df['eco']] #.copy()
+        rev_sorted_eco_data_df = filtered_eco_data_df.sort_values('pgn', ascending=False) #.copy()
+        for _, row in rev_sorted_eco_data_df.iterrows():
             #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
             if row['pgn'] == pgn[:len(row['pgn'])]:
-                eco_dict = row.to_dict()
+                found_eco_dict = row.to_dict()
                 break     
 
     # if no ECO available or given ECO is wrong 
     # and no related ECO data found
     # do it again and check with complete database
-    if not bool(eco_dict):
-        eco_data_df = eco_df.copy()
-        res_df = eco_data_df.sort_values('pgn', ascending=False).copy()
-        for _, row in res_df.iterrows():
+    if not bool(found_eco_dict):
+        eco_data_df = eco_df #.copy()
+        rev_sorted_eco_data_df = eco_data_df.sort_values('pgn', ascending=False) #.copy()
+        for _, row in rev_sorted_eco_data_df.iterrows():
             #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
             if row['pgn'] == pgn[:len(row['pgn'])]:
-                eco_dict = row.to_dict()
+                found_eco_dict = row.to_dict()
                 break
 
-    return(eco_dict)
+    return(found_eco_dict)
 
 def main():
 

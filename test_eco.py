@@ -23,8 +23,8 @@ class Test_unittest(unittest.TestCase):
         self.assertEqual(True, bool('A01' == res['eco'] and '1. b3' == res['pgn']))
 
     # Test 4
-    # find correct classification for 
-    # PGN only give
+    # find correct classification  
+    # if only PGN is given
     def test_get_eco_data_for__pgn_only(self):
         res = eco.get_eco_data_for(pgn='1. b3')
         self.assertEqual(True, bool('A01' == res['eco'] and '1. b3' == res['pgn']))

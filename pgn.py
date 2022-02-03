@@ -339,8 +339,8 @@ def get_incremented_filename(filename:str)->str:
     return(filename)
 
 
-def store_document(doc: Document, file_name: str)-> str:
-    """Return True after Document is stored with file_name"""
+def store_document(doc: Document, file_name: str)-> dict:
+    """Return a dict{'done' : True, 'file_name' : <file_name>} after Document is stored at 'file_name'"""
     file_name = get_incremented_filename(file_name)
     doc.save(file_name)
     # check that file name ist stored
