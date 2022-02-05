@@ -33,11 +33,11 @@ def get_pgnfile_names_from_dir(dir='PGN', ext='.pgn')->list:
 def get_games_from_pgnfile(file_name:str)->pd.DataFrame:
     """Return a DataFrame with all games of the file_name, incl. headers and pgn game notation."""
     # existance of file is ensured
-    pgn = open(file_name)#, encoding="utf-8")
+    pgn_file = open(file_name)#, encoding="utf-8")
     games_df = pd.DataFrame()
     # iterate over all games of a file
     while True:
-        game = chess.pgn.read_game(pgn)
+        game = chess.pgn.read_game(pgn_file)
         if game is None:
             break
 
@@ -45,6 +45,7 @@ def get_games_from_pgnfile(file_name:str)->pd.DataFrame:
         game_dict["pgn"] = game.board().variation_san(game.mainline_moves())
         game_dict['file'] = file_name
         games_df = games_df.append(game_dict, ignore_index=True)
+    pgn_file.close()
     return(games_df)
 
 

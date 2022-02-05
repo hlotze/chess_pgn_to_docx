@@ -1,4 +1,5 @@
 eco.csv
+eco.xlsx
 my_secrets.py
 my_snippets.ipynb
 __pycache__
@@ -8,4 +9,5 @@ requirements_conda.txt
 requirements_pip.txt
 DOCX/TEST/2001*
 eco_pgn2csv.py
+versions.py
 
