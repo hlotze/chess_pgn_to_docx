@@ -1,9 +1,11 @@
-#import codecs
+from __future__ import print_function
+
 import io
 import os
 import os.path
 import re
 import sys
+from pathlib import Path
 
 import warnings
 
@@ -23,16 +25,18 @@ import chessboard as cb
 import eco as eco
 
 
-def get_pgnfile_names_from_dir(dir='PGN', ext='.pgn')->list:
+def get_pgnfile_names_from_dir(pgn_dir='PGN/', ext='.pgn')->list:
     ### Return a python list with filenames from a given directory and given extension '.pgn' '.PGN' ### 
-    if False == os.path.isdir(dir):
-        print(f'directory \'{dir}\' does not exits, please create it.')
-        sys.exit(1)
+
+    # if False == os.path.isdir(pgn_dir):
+    #     print(f'directory \'{pgn_dir}\' does not exits, please create it.')
+    #     sys.exit(1)
+    
     file_names_list = []
-    for file in os.listdir(dir):
+    for file in os.listdir(pgn_dir):
         if file.endswith(ext) or file.endswith(ext.upper()):
-            if os.path.isfile(os.path.join(dir, file)):
-                file_names_list.append(os.path.join(dir, file))
+            if os.path.isfile(os.path.join(pgn_dir, file)):
+                file_names_list.append(os.path.join(pgn_dir, file))
     return(sorted(file_names_list))
 
 
@@ -368,15 +372,17 @@ def store_document(doc: Document, file_name: str)-> dict:
 
 def main():
     ##################################################
-    # for development just use 
-    #   'PGN/TEST/test_do_not_change.pgn' with 5 games
-    # and only its last pgn to generate one document
-    # with the diagrams, at
-    #   'DOCX/TEST'
-    # (you have to run this 'pgn.py')
+    # this is for testing only
+    # you need to create at your working directory
+    # a directory PGN/, structured as the repo's PGN dir
+    # or 
+    # change the code at 
+    #   pgn.main pgn_dir to whatever you need
+    # the line here :
     ##################################################
-    fn = get_pgnfile_names_from_dir(dir='PGN/TEST')[0]
-
+    pgn_dir = 'PGN/TEST/'
+    fn = get_pgnfile_names_from_dir(pgn_dir=pgn_dir)[0]
+    
     try:
         # check if file exists
         f = open(fn, 'r')
@@ -418,8 +424,6 @@ def main():
         f.close()
 
     return()
-
-
 
 if __name__ == '__main__':
     main()

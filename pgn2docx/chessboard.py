@@ -1,8 +1,8 @@
+from __future__ import print_function
 
 import chess
 import numpy as np
 
-from __future__ import print_function
 
 # chessboard:  white view
 #    top    files black pieces - lowercase chars,
@@ -158,8 +158,9 @@ start_white_str = \
 def str2arr(cb_str: str) -> np.ndarray:
     """Return the chessboard string as ndarray (10,10)"""
     cb_tmp = str(cb_str).replace('\n', '', -1).replace(' ', '', -1)
-    cb_arr = np.array([cb_tmp[i:i+2]
-                      for i in range(0, len(cb_tmp), 2)]).reshape((10, 10))
+    cb_arr = np.array(
+        [cb_tmp[i:i+2] for i in range(0, len(cb_tmp), 2)]
+    ).reshape((10, 10))
     return(cb_arr)
 
 
@@ -304,11 +305,11 @@ def board2arr(board: chess.Board) -> np.ndarray:
     #   ( 0,  0) top left, and
     #   (10, 10) bottom right
 
-    # as PGN printouts are usually from white perspective 
+    # as PGN printouts are usually from white perspective
     # this is a reasonable assumption
     orientation = chess.WHITE
     board_arr = np.full((8, 8), '_')
-    for square, bb in enumerate(chess.BB_SQUARES):  
+    for square, bb in enumerate(chess.BB_SQUARES):
         # a1 b1 c1 ... h1,
         # a2 b2 c2 ... h2,
         # ...,
@@ -341,13 +342,16 @@ def board2arr(board: chess.Board) -> np.ndarray:
                 out_arr[r+1][f+1] = out
     return(np.array(out_arr))
 
+
 def board2str(board: chess.Board) -> str:
     """Return the chessboard str from a 'chess.board'"""
     return(arr2str(board2arr(board)))
 
+
 def board2ttf(board: chess.Board) -> str:
     """Return the chessboard TTF from a 'chess.board'"""
     return(str2ttf(arr2str(board2arr(board))))
+
 
 def main():
 
@@ -368,7 +372,6 @@ def main():
     print('Chessboard - Black - TTF')
     print(str2ttf(start_black_str))
 
-
     print('-------------------------------------')
     print('Chessboard - White - chess.Board')
     print(board2str(chess.Board()))
@@ -378,7 +381,7 @@ def main():
     board = chess.Board(
         'r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4')
     print(board2str(board))
-    
+
     print('Chessboard - White - FEN --> TTF')
     print(board2ttf(board))
 

@@ -25,7 +25,7 @@ def main():
     if False == os.path.isdir(pgn_dir):
         print(f'directory \'{pgn_dir}\' does not exits, please create it.')
         sys.exit(1)    
-    file_names_list = pgn.get_pgnfile_names_from_dir(dir=pgn_dir)
+    file_names_list = pgn.get_pgnfile_names_from_dir(pgn_dir=pgn_dir)
 
     for fn in file_names_list:
         try:

@@ -1,5 +1,7 @@
 # pgn2docx
 
+## actually in -- dev mode -- no packages to use
+
 ## What this site provides 
 - a script `pgn2docx.py`  that generates one DOCX file from one chess PGN[^1] match, with a chessboard for each half move, using True Type Font Chess Merida, i.e. 3 full moves / Din A4 page. 
   - ensure that you installed the TTF[^5] Chess Merida, which is given e.g. at `TTF/` directory.

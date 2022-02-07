@@ -85,7 +85,7 @@ def get_eco_data_for(eco=None, pgn=None) -> dict:
     return(found_eco_dict)
 
 def main():
-
+    
     print('test data')
     print(eco_test_data_dict)
 
