@@ -1,7 +1,7 @@
 
 import unittest
 
-from pgn2docx import eco as eco
+import eco as eco
 
 
 class Test_unittest(unittest.TestCase):
@@ -29,4 +29,6 @@ class Test_unittest(unittest.TestCase):
     def test_get_eco_data_for__pgn_only(self):
         res = eco.get_eco_data_for(pgn='1. b3')
         self.assertEqual(True, bool('A01' == res['eco'] and '1. b3' == res['pgn']))
-    
+        
+if __name__ == '__main__':
+    unittest.main()    

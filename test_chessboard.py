@@ -1,4 +1,4 @@
-from pgn2docx import chessboard as cb
+import chessboard as cb
 
 import numpy as np
 import chess
@@ -30,7 +30,7 @@ class Test_unittest(unittest.TestCase):
 
     # Test 3
     def test_start_white_str(self):
-        self.assertEqual(cb.start_white_str,
+        self.assertEqual(cb.START_WHITE_STR,
             'tl -- -- -- -- -- -- -- -- tr \n' + \
             '8| rw nb bw qb kw bb nw rb || \n' + \
             '7| pb pw pb pw pb pw pb pw || \n' + \
@@ -44,7 +44,7 @@ class Test_unittest(unittest.TestCase):
     
     # Test 4
     def test_start_black_str(self):
-        self.assertEqual(cb.start_black_str,
+        self.assertEqual(cb.START_BLACK_STR,
             'tl -- -- -- -- -- -- -- -- tr \n' +
             '1| Rw Nb Bw Kb Qw Bb Nw Rb || \n' +
             '2| Pb Pw Pb Pw Pb Pw Pb Pw || \n' +
@@ -58,7 +58,7 @@ class Test_unittest(unittest.TestCase):
     
     # Test 5
     def test_empty_white_str(self):
-        self.assertEqual(cb.empty_white_str,
+        self.assertEqual(cb.EMPTY_WHITE_STR,
             'tl -- -- -- -- -- -- -- -- tr \n' +
             '8| -w -b -w -b -w -b -w -b || \n' +
             '7| -b -w -b -w -b -w -b -w || \n' +
@@ -72,7 +72,7 @@ class Test_unittest(unittest.TestCase):
     
     # Test 6
     def test_empty_black_str(self):
-        self.assertEqual(cb.empty_black_str,
+        self.assertEqual(cb.EMPTY_BLACK_STR,
             'tl -- -- -- -- -- -- -- -- tr \n' +
             '1| -w -b -w -b -w -b -w -b || \n' +
             '2| -b -w -b -w -b -w -b -w || \n' +
@@ -88,80 +88,80 @@ class Test_unittest(unittest.TestCase):
     def test_start_white_arr(self):
         self.assertEqual(
             True,
-            np.array_equal(cb.start_white_arr,
-                           cb.str2arr(cb.start_white_str)))
+            np.array_equal(cb.START_WHITE_ARR,
+                           cb.str2arr(cb.START_WHITE_STR)))
 
     
     # Test 8
     def test_start_black_arr(self):
         self.assertEqual(
             True,
-            np.array_equal(cb.start_black_arr,
-                           cb.str2arr(cb.start_black_str)))
+            np.array_equal(cb.START_BLACK_ARR,
+                           cb.str2arr(cb.START_BLACK_STR)))
 
     # Test 9
     def test_empty_white_arr(self):
         self.assertEqual(
             True,
-            np.array_equal(cb.empty_white_arr,
-                           cb.str2arr(cb.empty_white_str)))
+            np.array_equal(cb.EMPTY_WHITE_ARR,
+                           cb.str2arr(cb.EMPTY_WHITE_STR)))
 
     # Test 10
     def test_empty_black_arr(self):
         self.assertEqual(
-            cb.arr2str(cb.empty_black_arr),
-            cb.empty_black_str)
+            cb.arr2str(cb.EMPTY_BLACK_ARR),
+            cb.EMPTY_BLACK_STR)
 
     # Test 11
     def test_str2arr(self):
         self.assertEqual(
-            cb.arr2str(cb.str2arr(cb.start_white_str)), 
-            cb.start_white_str)
+            cb.arr2str(cb.str2arr(cb.START_BLACK_STR)), 
+            cb.START_BLACK_STR)
     
     # Test 12
     def test_arr2str(self):
         self.assertEqual(
-            cb.arr2str(cb.start_white_arr),
-            cb.start_white_str)
+            cb.arr2str(cb.START_WHITE_ARR),
+            cb.START_WHITE_STR)
     
     # Test 13
     def test_arr_flip(self):
         self.assertEqual(
             True,
-            np.array_equal(cb.start_black_arr,
-                           cb.arr_flip(cb.start_white_arr)))
+            np.array_equal(cb.START_BLACK_ARR,
+                           cb.arr_flip(cb.START_WHITE_ARR)))
 
     # Test 14
     def test_str_flip(self):
         self.assertEqual(
-            cb.start_white_str,
-            cb.str_flip(cb.start_black_str))
+            cb.START_WHITE_STR,
+            cb.str_flip(cb.START_BLACK_STR))
 
     # Test 15
     def test_str_isflipped(self):
         self.assertEqual(
             True,
-            cb.str_isflipped(cb.start_white_str,
-                             cb.start_black_str))
+            cb.str_isflipped(cb.START_WHITE_STR,
+                             cb.START_BLACK_STR))
 
     # Test 16
     def test_arr_isflipped(self):
         self.assertEqual(
             True,
-            cb.arr_isflipped(cb.start_white_arr,
-                             cb.start_black_arr))
+            cb.arr_isflipped(cb.START_WHITE_ARR,
+                             cb.START_BLACK_ARR))
 
     # Test 17
     def test_isflipped(self):
         self.assertEqual(
             True,
-            cb.isflipped(cb.start_white_arr,
-                         cb.start_black_str))
+            cb.isflipped(cb.START_WHITE_ARR,
+                         cb.START_BLACK_STR))
 
     # Test 18
     def test_str2ttf(self):
         self.assertEqual(
-            cb.str2ttf(cb.start_white_str),
+            cb.str2ttf(cb.START_WHITE_STR),
             '1222222223\n' +
             'ÇtMvWlVmT5\n' +
             'ÆOoOoOoOo5\n' +
@@ -176,7 +176,7 @@ class Test_unittest(unittest.TestCase):
     # Test 19
     def test_arr2ttf(self):
         self.assertEqual(
-            cb.arr2ttf(cb.start_white_arr),
+            cb.arr2ttf(cb.START_WHITE_ARR),
             '1222222223\n' +
             'ÇtMvWlVmT5\n' +
             'ÆOoOoOoOo5\n' +
@@ -192,19 +192,19 @@ class Test_unittest(unittest.TestCase):
     def test_board2arr(self):
         self.assertEqual(
             cb.arr2str(cb.board2arr(chess.Board())),
-            cb.start_white_str)
+            cb.START_WHITE_STR)
 
     # Test 21
     def test_board2str(self):
         self.assertEqual(
             cb.board2str(chess.Board()),
-            cb.start_white_str)
+            cb.START_WHITE_STR)
 
     # Test 22
     def test_board2ttf(self):
         self.assertEqual(
             cb.board2ttf(chess.Board()),
-            cb.str2ttf(cb.start_white_str))
+            cb.str2ttf(cb.START_WHITE_STR))
 
 
 if __name__ == '__main__':

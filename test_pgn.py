@@ -1,7 +1,7 @@
 
 import unittest
 
-from pgn2docx import pgn as pgn
+import pgn as pgn
 
 
 
