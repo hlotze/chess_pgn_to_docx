@@ -1,6 +1,7 @@
 __pycache__
 .vscode
 .github
+.github/workflows
 setup.py
 __OLD
 
