@@ -1,3 +1,5 @@
+"""functions for the eco mgmt of chess games"""
+from __future__ import print_function
 
 import io
 import sys
@@ -18,9 +20,9 @@ import pandas as pd
 #print(os.path.dirname(os.path.realpath(__file__)))
 
 eco_filename = os.path.dirname(os.path.realpath(__file__))+'/eco.zip'
-if False == os.path.isfile(eco_filename):
+if not os.path.isfile(eco_filename):
     print(f'file \'{eco_filename}\' does not exits')
-    sys.exit(1) 
+    sys.exit(1)
 
 eco_df = pd.read_csv(eco_filename,
                      sep=',',
@@ -42,10 +44,12 @@ eco_test_data_dict = {
             'Rxd4 32.Ne2 Ra4 33.Ke1 Rxa3 34.Rab1 Bb4+ 35.Kf1 Rd3  0-1'}
 
 def normalize_pgn_string(pgn:str) -> str:
-    """Return a normalized pgn string, e.g. '1.g4 d5 2.Bg2 c6' will be normalized to '1. g4 d5 2. Bg2 c6'"""
+    """Return a normalized pgn string, e.g.
+    '1.g4 d5 2.Bg2 c6' will be normalized to
+    '1. g4 d5 2. Bg2 c6'"""
     game = chess.pgn.read_game(io.StringIO(pgn))
     normed_pgn_str = game.board().variation_san(game.mainline_moves())
-    return(normed_pgn_str)
+    return normed_pgn_str
 
 def get_eco_data_for(eco=None, pgn=None) -> dict:
     """Return the ECO data for the given ECO and PGN, even if ECO is wrong or missing"""
@@ -53,7 +57,7 @@ def get_eco_data_for(eco=None, pgn=None) -> dict:
         eco = ''
     if pgn is None:
         sys.exit("error: no pgn given at 'get_eco_data_for()'")
-    
+
     # normalize the pgn string
     pgn = normalize_pgn_string(pgn)
 
@@ -68,9 +72,9 @@ def get_eco_data_for(eco=None, pgn=None) -> dict:
             #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
             if row['pgn'] == pgn[:len(row['pgn'])]:
                 found_eco_dict = row.to_dict()
-                break     
+                break
 
-    # if no ECO available or given ECO is wrong 
+    # if no ECO available or given ECO is wrong
     # and no related ECO data found
     # do it again and check with complete database
     if not bool(found_eco_dict):
@@ -81,11 +85,10 @@ def get_eco_data_for(eco=None, pgn=None) -> dict:
             if row['pgn'] == pgn[:len(row['pgn'])]:
                 found_eco_dict = row.to_dict()
                 break
-
-    return(found_eco_dict)
+    return found_eco_dict
 
 def main():
-    
+    """some test for the eco.py"""
     print('test data')
     print(eco_test_data_dict)
 

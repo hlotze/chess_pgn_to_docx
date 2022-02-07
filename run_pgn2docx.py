@@ -10,6 +10,18 @@ from docx.shared import Inches, Mm, Pt
 
 import eco as eco
 import pgn as pgn
+import chessboard as cb
+
+def get_pgnfile_names_from_dir(pgn_dir='PGN/', ext='.pgn')->list:
+    ### Return a python list with filenames from a given directory and given extension '.pgn' '.PGN' ### 
+    file_names_list = []
+    for file in os.listdir(pgn_dir):
+        if file.endswith(ext) or file.endswith(ext.upper()):
+            if os.path.isfile(os.path.join(pgn_dir, file)):
+                file_names_list.append(os.path.join(pgn_dir, file))
+    return(sorted(file_names_list))
+
+
 
 def main():
 
@@ -25,7 +37,7 @@ def main():
     if False == os.path.isdir(pgn_dir):
         print(f'directory \'{pgn_dir}\' does not exits, please create it.')
         sys.exit(1)    
-    file_names_list = pgn.get_pgnfile_names_from_dir(pgn_dir=pgn_dir)
+    file_names_list = get_pgnfile_names_from_dir(pgn_dir=pgn_dir)
 
     for fn in file_names_list:
         try:

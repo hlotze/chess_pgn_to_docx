@@ -1,5 +1,6 @@
 __pycache__
 .vscode
+.github
 setup.py
 __OLD
 

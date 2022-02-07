@@ -1,7 +1,7 @@
 
 import unittest
 
-import eco as eco
+from pgn2docx import eco as eco
 
 
 class Test_unittest(unittest.TestCase):

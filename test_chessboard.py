@@ -1,4 +1,4 @@
-import chessboard as cb
+from pgn2docx import chessboard as cb
 
 import numpy as np
 import chess

@@ -1,3 +1,4 @@
+"""functions for chessboard mgmt, and TTF mapping"""
 from __future__ import print_function
 
 import chess
@@ -18,6 +19,7 @@ import numpy as np
 # 2| Pw Pb Pw Pb Pw Pb Pw Pb ||
 # 1| Rb Nw Bb Qw Kb Bw Nb Rw ||  # |x that marks the site to move, at file 1 --> white
 # bl a- b- c- d- e- f- g- h- br
+
 
 # These TTF works with the mapping at 'font_dict',
 # I prefer 'Chess Merida'
@@ -142,7 +144,7 @@ font_dict = {
 # the chessboard from White view; as str
 # ranks: 8 ... 1
 # files: a ... h
-start_white_str = \
+START_WHITE_STR = \
     'tl -- -- -- -- -- -- -- -- tr \n' + \
     '8| rw nb bw qb kw bb nw rb || \n' + \
     '7| pb pw pb pw pb pw pb pw || \n' + \
@@ -161,22 +163,22 @@ def str2arr(cb_str: str) -> np.ndarray:
     cb_arr = np.array(
         [cb_tmp[i:i+2] for i in range(0, len(cb_tmp), 2)]
     ).reshape((10, 10))
-    return(cb_arr)
+    return cb_arr
 
 
 def arr2str(cb_arr: np.ndarray, sep=' ') -> str:
     """Return the chessboard ndarray as string"""
     cb_str = ''
-    for f in range(10):
-        l = ''
-        for r in range(10):
-            l += cb_arr[f, r] + sep
-        cb_str += l + '\n'
-    return(cb_str)
+    for file in range(10):
+        line = ''
+        for rank in range(10):
+            line += cb_arr[file, rank] + sep
+        cb_str += line + '\n'
+    return cb_str
 
 
 def arr_flip(cb_arr: np.ndarray) -> np.ndarray:
-    """Return the chessboard ndarray 
+    """Return the chessboard ndarray
        as flipped ndarray (10,10)"""
     cb_arr_flipped = np.full((10, 10), '__').reshape(10, 10)
     # flip the squares
@@ -191,7 +193,7 @@ def arr_flip(cb_arr: np.ndarray) -> np.ndarray:
     cb_arr_flipped[9, 0] = cb_arr[9, 0]
     # flip bottom border's rank names
     cb_arr_flipped[9, 1:9] = np.flip(cb_arr[9, 1:9])
-    return(cb_arr_flipped)
+    return cb_arr_flipped
 
 
 def str_flip(cb_str: str) -> str:
@@ -200,22 +202,22 @@ def str_flip(cb_str: str) -> str:
 
 
 def str_isflipped(cb1_str: str, cb2_str: str) -> bool:
-    """Return the comparism of 2 chessboards' 
-       strings, if the 2nd is identical 
+    """Return the comparism of 2 chessboards'
+       strings, if the 2nd is identical
        but flipped to the 1st"""
-    return(cb1_str == str_flip(cb2_str))
+    return cb1_str == str_flip(cb2_str)
 
 
 def arr_isflipped(cb1_arr: np.ndarray, cb2_arr: np.ndarray) -> bool:
-    """Return the comparism of 2 chessboards' 
-       ndarrays, if the 2nd is identical 
+    """Return the comparism of 2 chessboards'
+       ndarrays, if the 2nd is identical
        but flipped to the 1st"""
     return(np.array_equal(cb1_arr, arr_flip(cb2_arr)))
 
 
 def isflipped(cb1, cb2) -> bool:
-    """Return the comparism of 2 chessboards' 
-       strings or ndarrays, if the 2nd is identicall 
+    """Return the comparism of 2 chessboards'
+       strings or ndarrays, if the 2nd is identicall
        but flipped to the 1st"""
     if np.ndarray == type(cb1):
         cb1_str = arr2str(cb1)
@@ -225,40 +227,40 @@ def isflipped(cb1, cb2) -> bool:
         cb2_str = arr2str(cb2)
     else:
         cb2_str = cb2
-    return(str_isflipped(cb1_str, cb2_str))
+    return str_isflipped(cb1_str, cb2_str)
 
 
 def str2ttf(cb_str: str) -> str:
     """Return the chessbord string as TTF string"""
     cb_arr = str2arr(cb_str)
     cb_ttf_str = ''
-    for x in range(10):
-        l = ''
-        for y in range(10):
-            l += font_dict[cb_arr[x, y]].format('b')
-        cb_ttf_str += l + '\n'
-    return(cb_ttf_str)
+    for x_coord in range(10):
+        line = ''
+        for y_coord in range(10):
+            line += font_dict[cb_arr[x_coord, y_coord]].format('b')
+        cb_ttf_str += line + '\n'
+    return cb_ttf_str
 
 
 def arr2ttf(cb_arr: np.ndarray) -> str:
     """Return the chessbord np.ndarray as TTF string"""
     cb_ttf_str = ''
-    for x in range(10):
-        l = ''
-        for y in range(10):
-            l += font_dict[str(cb_arr[x, y])].format('b')
-        cb_ttf_str += l + '\n'
-    return(cb_ttf_str)
+    for x_coord in range(10):
+        line = ''
+        for y_coord in range(10):
+            line += font_dict[str(cb_arr[x_coord, y_coord])].format('b')
+        cb_ttf_str += line + '\n'
+    return cb_ttf_str
 
 
 # the chessboard from Black view - as str
-start_black_str = str_flip(start_white_str)
+START_BLACK_STR = str_flip(START_WHITE_STR)
 
 # the chessboard from White view; as np.ndarray
-start_white_arr = str2arr(start_white_str)
+START_WHITE_ARR = str2arr(START_WHITE_STR)
 
 # the chessboard from Black view - as np.ndarray
-start_black_arr = arr_flip(start_white_arr)
+START_BLACK_ARR = arr_flip(START_WHITE_ARR)
 
 
 def _empty_white_cb_arr() -> np.ndarray:
@@ -275,20 +277,20 @@ def _empty_white_cb_arr() -> np.ndarray:
     # make an ndarray
     bw_arr = np.array([bw_tmp[i:i+2]
                        for i in range(0, len(bw_tmp), 2)]).reshape((8, 8))
-    cb_arr = start_white_arr.copy()
+    cb_arr = START_WHITE_ARR.copy()
     # put into standard white board --> drop pieces
     cb_arr[1:9, 1:9] = bw_arr[0:8, 0:8]
     # return the white board without the pieces
-    return(cb_arr)
+    return cb_arr
 
 
-empty_white_arr = _empty_white_cb_arr()
+EMPTY_WHITE_ARR = _empty_white_cb_arr()
 
-empty_black_arr = arr_flip(empty_white_arr)
+EMPTY_BLACK_ARR = arr_flip(EMPTY_WHITE_ARR)
 
-empty_white_str = arr2str(empty_white_arr)
+EMPTY_WHITE_STR = arr2str(EMPTY_WHITE_ARR)
 
-empty_black_str = arr2str(empty_black_arr)
+EMPTY_BLACK_STR = arr2str(EMPTY_BLACK_ARR)
 
 
 def board2arr(board: chess.Board) -> np.ndarray:
@@ -309,7 +311,7 @@ def board2arr(board: chess.Board) -> np.ndarray:
     # this is a reasonable assumption
     orientation = chess.WHITE
     board_arr = np.full((8, 8), '_')
-    for square, bb in enumerate(chess.BB_SQUARES):
+    for square, _ in enumerate(chess.BB_SQUARES):
         # a1 b1 c1 ... h1,
         # a2 b2 c2 ... h2,
         # ...,
@@ -317,8 +319,8 @@ def board2arr(board: chess.Board) -> np.ndarray:
         file_index = chess.square_file(square)
         rank_index = chess.square_rank(square)
 
-        x = (7 - rank_index if orientation else rank_index)
-        y = (file_index if orientation else 7 - file_index)
+        x_coord = (7 - rank_index if orientation else rank_index)
+        y_coord = (file_index if orientation else 7 - file_index)
 
         piece_char = ""
         if board is not None:
@@ -327,20 +329,19 @@ def board2arr(board: chess.Board) -> np.ndarray:
                 piece_char = piece.symbol()
                 if chess.WHITE == chess.COLOR_NAMES[piece.color]:
                     piece_char = piece_char.upper()
-                board_arr[x, y] = piece_char
+                board_arr[x_coord, y_coord] = piece_char
 
     # print(board_arr)
-    out_arr = (empty_white_arr).tolist()
+    out_arr = (EMPTY_WHITE_ARR).tolist()
     # print(out_arr)
     # put into an empty board
-    for r in range(8):
-        for f in range(8):
-            if '_' != board_arr[r][f]:
-                b = str(board_arr[r][f])
-                o = str(out_arr[r+1][f+1])
-                out = o.replace('-', b)
-                out_arr[r+1][f+1] = out
-    return(np.array(out_arr))
+    for rank in range(8):
+        for file in range(8):
+            if '_' != board_arr[rank][file]:
+                out = str(out_arr[rank+1][file+1]).replace( \
+                    '-', str(board_arr[rank][file]))
+                out_arr[rank+1][file+1] = out
+    return np.array(out_arr)
 
 
 def board2str(board: chess.Board) -> str:
@@ -354,23 +355,23 @@ def board2ttf(board: chess.Board) -> str:
 
 
 def main():
-
+    """some test for the chessboard.py"""
     # some examples
     print('\nChessboard - White')
-    print(start_white_str)
+    print(START_WHITE_STR)
 
     print('Chessboard - White - flipped')
-    print(str_flip(start_white_str))
+    print(str_flip(START_WHITE_STR))
 
     print('isflipped(Chessboard - White, Chessboard - White - flipped):',
-          isflipped(start_white_str, start_black_arr))
+          isflipped(START_WHITE_STR, START_BLACK_STR))
 
     print('\n-------------------------------------')
     print('Chessboard - White - TTF')
-    print(str2ttf(start_white_str))
+    print(str2ttf(START_WHITE_STR))
 
     print('Chessboard - Black - TTF')
-    print(str2ttf(start_black_str))
+    print(str2ttf(START_BLACK_STR))
 
     print('-------------------------------------')
     print('Chessboard - White - chess.Board')

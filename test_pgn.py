@@ -1,16 +1,16 @@
 
 import unittest
 
-import pgn as pgn
+from pgn2docx import pgn as pgn
 
 
 
 class Test_unittest(unittest.TestCase):
 
     # Test 1
-    def test_get_pgnfile_names_from_dir(self):
-        # there should be at least on file with extension '.pgn' at directory 'PGN/TEST'
-        self.assertEqual(True, 0 < len(pgn.get_pgnfile_names_from_dir(pgn_dir='PGN/TEST', ext='.pgn')))
+    # def test_get_pgnfile_names_from_dir(self):
+    #     # there should be at least on file with extension '.pgn' at directory 'PGN/TEST'
+    #     self.assertEqual(True, 0 < len(pgn.get_pgnfile_names_from_dir(pgn_dir='PGN/TEST', ext='.pgn')))
 
     # Test 2
     def test_get_games_from_pgnfile(self):

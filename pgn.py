@@ -1,84 +1,62 @@
+"""functions for pgn mgmt, and docx generation"""
 from __future__ import print_function
 
 import io
 import os
 import os.path
 import re
-import sys
-from pathlib import Path
+#import sys
+
 
 import warnings
 
 import chess
 import chess.pgn
 import numpy as np
-
-warnings.simplefilter(action='ignore', category=FutureWarning)
-
 import pandas as pd
+
 from docx import Document
 from docx.enum.text import WD_LINE_SPACING, WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement, ns
 from docx.shared import Inches, Mm, Pt
 
 import chessboard as cb
-import eco as eco
+import eco
 
-
-def get_pgnfile_names_from_dir(pgn_dir='PGN/', ext='.pgn')->list:
-    ### Return a python list with filenames from a given directory and given extension '.pgn' '.PGN' ### 
-
-    # if False == os.path.isdir(pgn_dir):
-    #     print(f'directory \'{pgn_dir}\' does not exits, please create it.')
-    #     sys.exit(1)
-    
-    file_names_list = []
-    for file in os.listdir(pgn_dir):
-        if file.endswith(ext) or file.endswith(ext.upper()):
-            if os.path.isfile(os.path.join(pgn_dir, file)):
-                file_names_list.append(os.path.join(pgn_dir, file))
-    return(sorted(file_names_list))
-
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 def get_games_from_pgnfile(file_name:str)->pd.DataFrame:
     """Return a DataFrame with all games of the file_name, incl. headers and pgn game notation."""
-    if False == os.path.isfile(file_name):
-        print(f'file \'{file_name}\' does not exits')
-        sys.exit(1)       
-    # existance of file is ensured
-    pgn_file = open(file_name)#, encoding="utf-8")
-    games_df = pd.DataFrame()
-    # iterate over all games of a file
-    while True:
-        game = chess.pgn.read_game(pgn_file)
-        if game is None:
-            break
-
-        game_dict = dict(game.headers)
-        game_dict["pgn"] = game.board().variation_san(game.mainline_moves())
-        game_dict['file'] = file_name
-        games_df = games_df.append(game_dict, ignore_index=True)
-    pgn_file.close()
-    return(games_df)
-
+    with open(file_name, "r", encoding='utf-8') as pgn_file:
+        games_df = pd.DataFrame()
+        # iterate over all games of a file
+        while True:
+            game = chess.pgn.read_game(pgn_file)
+            if game is None:
+                break
+            game_dict = dict(game.headers)
+            game_dict["pgn"] = game.board().variation_san(game.mainline_moves())
+            game_dict['file'] = file_name
+            games_df = games_df.append(game_dict, ignore_index=True)
+    return games_df
 
 def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
     """Return at each row full move info: W & B SAN string and W & B TTF board string"""
     # start chess board
     board = chess.Board()
     game = chess.pgn.read_game(io.StringIO(pgn_str))
-    
+
     # prep for half moves
     half_moves_df = pd.DataFrame()
     for move in game.mainline_moves():
         # dict of half move infos
         move_dict = {}
-        
+
         move = chess.Move.from_uci(move.uci())
         move_dict['FMVN'] = int(board.fullmove_number)
         move_dict['SAN'] = board.san(move)
 
-        # TODO fromto for later markup
+        # fromto for later markup
         move_dict['sq_from'] = move.uci()[:2]
         move_dict['sq_to'] = move.uci()[2:4]
         # site to move chess.WHITE or chess.BLACK
@@ -90,21 +68,21 @@ def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
         else:
             move_dict['mv_san_str'] = \
                 str(move_dict['FMVN']) + '. ' + \
-                ' ... ' + move_dict['SAN']        
-            
+                ' ... ' + move_dict['SAN']
+
         board.push(move)
-        sq = ''
+        sq_check = ''
         if board.is_check():
-            sq = chess.square_name(board.king(board.turn))
-        move_dict['sq_check'] = sq
-        
+            sq_check = chess.square_name(board.king(board.turn))
+        move_dict['sq_check'] = sq_check
+
         move_dict['board_arr'] = cb.board2arr(board)
         #print(move_dict)
         half_moves_df = half_moves_df.append(move_dict, ignore_index=True)
 
     half_moves_df = half_moves_df.astype({'FMVN' : np.uint8})
     #print(half_moves_df)
-    
+
     # half moves to full moves data
     # for direct use at document creation
     full_moves_df = pd.DataFrame()
@@ -113,7 +91,7 @@ def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
         full_move_dict['FMVN'] = int(hmv['FMVN'])
         if chess.WHITE == hmv['player']:
             full_move_dict['w_hmv_str'] = hmv['mv_san_str']
-            # depending on marked squares 
+            # depending on marked squares
             # change the boards' ttf representation
             full_move_dict['w_sq_from'] = hmv['sq_from']
             full_move_dict['w_sq_to'] = hmv['sq_to']
@@ -122,7 +100,7 @@ def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
         else:
             #full_move_dict['b_hmv_str'] = full_move_dict['w_hmv_str'][:-5] + ' ' +  hmv['SAN']
             full_move_dict['b_hmv_str'] = hmv['mv_san_str']
-            # depending on marked squares 
+            # depending on marked squares
             # change the boards' ttf representation
             full_move_dict['b_sq_from'] = hmv['sq_from']
             full_move_dict['b_sq_to'] = hmv['sq_to']
@@ -130,7 +108,7 @@ def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
             full_move_dict['b_board_ttf'] = cb.arr2ttf(hmv['board_arr'])
             full_moves_df = full_moves_df.append(full_move_dict, ignore_index=True)
     full_moves_df = full_moves_df.astype({'FMVN' : np.uint8})
-    return(full_moves_df)    
+    return full_moves_df
 
 
 def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess Merida')->Document:
@@ -163,28 +141,20 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
     header = doc.sections[0].header
     header.bottom_margin = Inches(0.2)
     head = header.paragraphs[0]
-    head.text = '{Date} {Event}, {Site}\n{White} vs. {Black}   {Result}'.\
-        format(Event=game_dict['Event'], \
-               Site=game_dict['Site'], \
-               Date=game_dict['Date'].replace('.','-'), \
-               White=game_dict['White'], \
-               Black=game_dict['Black'], \
-               Result=game_dict['Result'])
+    head.text = f"{game_dict['Date'].replace('.','-')} " + \
+        f"{game_dict['Event']}, {game_dict['Site']}\n" + \
+        f"{game_dict['White']} vs. {game_dict['Black']}   " + \
+        f"{game_dict['Result']}"
     # doc header --------------------------------------
 
     # doc footer --------------------------------------
     def create_element(name):
-        return(OxmlElement(name))
+        return OxmlElement(name)
 
     def create_attribute(element, name, value):
         return(element.set(ns.qn(name), value))
 
-    # taken from
-    #   https://stackoverflow.com/questions/56658872/add-page-number-using-python-docx/62534711#62534711
     def add_page_number(paragraph):
-        
-        # paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
-
         page_run = paragraph.add_run()
         t1 = create_element('w:t')
         create_attribute(t1, 'xml:space', 'preserve')
@@ -237,8 +207,9 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
     for key in game_dict.keys():
         if 'file' != key and 'pgn' != key:
             out_str = out_str + '[{k}] \"{v}\"\n'.format(k=key, v=game_dict[key])
+
     out_str = out_str + '\n'
-    out_str = out_str + '{pgn}  {res}\n'.format(pgn=game_dict['pgn'], res=game_dict['Result'])
+    out_str = out_str + f"{game_dict['pgn']}  {game_dict['Result']}\n"
     doc.add_paragraph(out_str)
 
     # some words about the game's ECO
@@ -246,20 +217,16 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
         # no eco section to print, e.g no eco found
         pass
     else:
-        if not('eco' in eco_dict.keys()):
+        if 'eco' not in eco_dict.keys():
             # no eco section to print, e.g no eco found
             pass
         else:
-            e = eco_dict['eco'][0]
-            eco_txt = '{e} - {group}\n{eco} - {subgroup} \n{variant} \n{pgn} \n'.format( \
-                                        e=e,
-                                        group=eco_dict['group'],
-                                        eco=eco_dict['eco'],  
-                                        subgroup=eco_dict['subgroup'].replace('?',''), 
-                                        variant=eco_dict['variant'].replace('?',''), 
-                                        pgn=eco_dict['pgn'])
+            eco_txt = f"{eco_dict['eco'][0]} - {eco_dict['group']}\n" + \
+                f"{eco_dict['eco']} - {eco_dict['subgroup'].replace('?','')} \n" + \
+                f"{eco_dict['variant'].replace('?','')} \n{eco_dict['pgn']} \n"
+
             doc.add_paragraph(eco_txt)
-            
+
             eco_board = chess.Board(eco_dict['fen'])
             eco_tbl = doc.add_table(2, 1)
             eco_row = eco_tbl.rows[0]
@@ -283,26 +250,26 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
     #  PGN diagramms --------------------------------------
     # the PGN data for diagram genration
     boards_df = prep_ttfboards_from_pgn(game_dict['pgn'])
-    
-    boards_tbl = doc.add_table(2*len(boards_df), 2)
-    for ix, fmv in boards_df.iterrows():
 
-        brd_row = boards_tbl.rows[2*ix]
-        
+    boards_tbl = doc.add_table(2*len(boards_df), 2)
+    for index, fmv in boards_df.iterrows():
+
+        brd_row = boards_tbl.rows[2*index]
+
         #########################################################
-        # TODO: 
-        # At fmv['w_board_ttf'] tht from-/to- 
+        # At fmv['w_board_ttf'] thr from-/to-
         # and check squares needs to be marked
-        # therefore a paragraph needs to be split into 
+        # therefore a paragraph needs to be split into
         # mutiple runs, e.g.
-        #   standard portion 
+        #   standard portion
         #   checked - with its own text & text.font.color
-        #   standard portion 
+        #   standard portion
         #   from square - with its own text & bachground color
-        #   standard portion 
+        #   standard portion
         #   to square - with its own text & bachground color
-        #   standard portion 
-        # see python-docx.readthedocs.io -> Run objects class docx.text.run.Run
+        #   standard portion
+        # see python-docx.readthedocs.io
+        #   -> Run objects class docx.text.run.Run
         #   or text.html#docx.text.paragraph.add_run
         #########################################################
 
@@ -328,21 +295,21 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
         brd_fnt.name = ttf_font_name
         brd_fnt.size = Pt(20)
 
-        if ix == len(boards_df)-1:
+        if index == len(boards_df)-1:
             if 0 == len(fmv['b_hmv_str']):
                 fmv['w_hmv_str'] = fmv['w_hmv_str'] + '   ' + game_dict['Result']
             else:
                 fmv['b_hmv_str'] = fmv['b_hmv_str'] + '   ' + game_dict['Result']
         # the SAN below the board diagrams
-        brd_row = boards_tbl.rows[2*ix+1]
+        brd_row = boards_tbl.rows[2*index+1]
         brd_row.cells[0].text = fmv['w_hmv_str']
         brd_row.cells[0].paragraphs[0].style.font.name = 'Verdana'
         brd_row.cells[0].paragraphs[0].paragraph_format.space_after = Pt(0)
         brd_row.cells[1].text = fmv['b_hmv_str']
         brd_row.cells[1].paragraphs[0].style.font.name = 'Verdana'
         brd_row.cells[1].paragraphs[0].paragraph_format.space_after = Pt(0)
-    #  PGN diagramms --------------------------------------        
-    return(doc)
+    #  PGN diagramms --------------------------------------
+    return doc
 
 
 def get_incremented_filename(filename:str)->str:
@@ -354,15 +321,17 @@ def get_incremented_filename(filename:str)->str:
     if rex:
         name = rex[1]
         seq = int(rex[2])
-    
+
     while os.path.exists(filename):
         seq += 1
         filename = f"{name}-{seq}{ext}"
-    return(filename)
+    return filename
 
 
 def store_document(doc: Document, file_name: str)-> dict:
-    """Return a dict{'done' : True, 'file_name' : <file_name>} after Document is stored at 'file_name'"""
+    """Return a dict{'done' : True,
+    'file_name' : <file_name>} after
+    Document is stored at 'file_name'"""
     file_name = get_incremented_filename(file_name)
     doc.save(file_name)
     # check that file name ist stored
@@ -371,57 +340,53 @@ def store_document(doc: Document, file_name: str)-> dict:
 
 
 def main():
+    """some test for the pgn.py"""
     ##################################################
     # this is for testing only
     # you need to create at your working directory
     # a directory PGN/, structured as the repo's PGN dir
-    # or 
-    # change the code at 
+    # or
+    # change the code at
     #   pgn.main pgn_dir to whatever you need
     # the line here :
     ##################################################
-    pgn_dir = 'PGN/TEST/'
-    fn = get_pgnfile_names_from_dir(pgn_dir=pgn_dir)[0]
-    
-    try:
-        # check if file exists
-        f = open(fn, 'r')
-        f.close
+    pgn_name = 'PGN/TEST/test_do_not_change.pgn'
 
-        # start to get the games out of one pgn file
-        games_df = get_games_from_pgnfile(fn)
+    # start to get the games out of one pgn file
+    games_df = get_games_from_pgnfile(pgn_name)
 
-        one_game_dict = games_df.iloc[1].to_dict()
-        
-        eco_result_dict = {}
-        if 'ECO' in one_game_dict.keys():
-            eco_result_dict = eco.get_eco_data_for(eco=one_game_dict['ECO'], pgn=one_game_dict['pgn'])
-        else:
-            eco_result_dict = eco.get_eco_data_for(eco='', pgn=one_game_dict['pgn'])
+    one_game_dict = games_df.iloc[1].to_dict()
 
-        my_doc = gen_document_from_game(one_game_dict, eco_result_dict)
+    eco_result_dict = {}
+    if 'ECO' in one_game_dict.keys():
+        eco_result_dict = \
+            eco.get_eco_data_for(eco=one_game_dict['ECO'], \
+                                    pgn=one_game_dict['pgn'])
+    else:
+        eco_result_dict = \
+            eco.get_eco_data_for(eco='',
+                                    pgn=one_game_dict['pgn'])
 
-        # fn fix for lichess pgn files
-        event = one_game_dict['Event'].replace(
-            '/', '_').replace(':', '_').replace('.', '-')
-        site = one_game_dict['Site'].replace(
-            '/', '_').replace(':', '_').replace('.', '-')
-        
-        fn = 'DOCX/TEST/' + one_game_dict['Date'].replace('.', '-') + '_' + \
-                            event + '_' + \
-                            site + '_( ' + \
-                            one_game_dict['White'] + ' - ' + \
-                            one_game_dict['Black'] + ' ).docx'
-        fn = fn.replace('??','_')
-        
-        # store document
-        ret_dict = store_document(my_doc, fn)
-        print('stored:', ret_dict['file_name'])
+    my_doc = gen_document_from_game(one_game_dict,
+                                    eco_result_dict)
 
-    except IOError:
-        print("File not accessible: ", fn)
-    finally:
-        f.close()
+    # fn fix for lichess pgn files
+    event = one_game_dict['Event'].replace(
+        '/', '_').replace(':', '_').replace('.', '-')
+    site = one_game_dict['Site'].replace(
+        '/', '_').replace(':', '_').replace('.', '-')
+
+    fname = 'DOCX/TEST/' + one_game_dict['Date'].replace( '.', '-') + \
+                        '_' + \
+                        event + '_' + \
+                        site + '_( ' + \
+                        one_game_dict['White'] + ' - ' + \
+                        one_game_dict['Black'] + ' ).docx'
+    fname = fname.replace('??','_')
+
+    # store document
+    ret_dict = store_document(my_doc, fname)
+    print('stored:', ret_dict['file_name'])
 
     return()
 
