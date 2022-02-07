@@ -2,6 +2,8 @@
 import chess
 import numpy as np
 
+from __future__ import print_function
+
 # chessboard:  white view
 #    top    files black pieces - lowercase chars,
 #    bottom files white pieces - uppercase chars
