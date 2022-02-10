@@ -26,19 +26,20 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
 - run the Python script `pgn2docx.py`
 
 ## Open item
-- [x] finitalize the project - initially done
+- [x] finitalize the project - initially done, it works on some machines :-)
 - [x] add unit tests - initially done, to be completed
 - [x] fix problems with file names 
   - [x] if *Seven Tag Roster* (details at [^1]) is incomplete, e.g. with older games
   - [x] if Site tag is a web address, e.g. https://lichess.org, as file names can not have a ':' or '/'
 - [x] add the game's ECO[^2] incl. diagram
+- [ ] change eco.zip to eco.xlsx; include different languages
 - [ ] mark a checked king at the diagrams
 - [ ] mark the from- and to-squares of a half move
 - [ ] add [%eval ...] comments [^3] to the SAN[^4] at bottom of a board
 - [ ] add 
   - [x] venv requirements
   - [ ] packageing - is actually a nightmare, will do it later after linting will become better
-  - [ ] documentation
+  - [x] documentation, wiki done
 - [ ] evtl. refactor coding to get aligned to [`python-chess`](https://python-chess.readthedocs.io/en/latest/) naming conventions and structures
 
 ## Contact

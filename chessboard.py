@@ -217,7 +217,7 @@ def arr_isflipped(cb1_arr: np.ndarray, cb2_arr: np.ndarray) -> bool:
 
 def isflipped(cb1, cb2) -> bool:
     """Return the comparism of 2 chessboards'
-       strings or ndarrays, if the 2nd is identicall
+       strings or ndarrays, if the 2nd is identical
        but flipped to the 1st"""
     if np.ndarray == type(cb1):
         cb1_str = arr2str(cb1)
