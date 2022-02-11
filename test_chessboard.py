@@ -1,3 +1,4 @@
+# pylint: disable=import-error
 import chessboard as cb
 
 import numpy as np
@@ -6,8 +7,8 @@ import unittest
 
 class Test_unittest(unittest.TestCase):
     # Test 1
-    def test_TTF_dict(self):
-        self.assertEqual(cb.TTF_dict, 
+    def test_TTF_DICT(self):
+        self.assertEqual(cb.TTF_DICT, 
             {'Chess Condal': 'CONDFONT.TTF', 
              'Chess Kingdom': 'KINGFONT.TTF', 
              'Chess Leipzig': 'LEIPFONT.TTF', 
@@ -15,7 +16,7 @@ class Test_unittest(unittest.TestCase):
 
     # Test 2
     def test_font_dict(self):
-        self.assertEqual(cb.font_dict,
+        self.assertEqual(cb.FONT_DICT,
             {'-w': '*', 'ow': '.', 'xw': 'x', 
              'Kw': 'k', 'Qw': 'q', 'Rw': 'r', 'Bw': 'b', 'Nw': 'n', 'Pw': 'p', 
              'kw': 'l', 'qw': 'w', 'rw': 't', 'bw': 'v', 'nw': 'm', 'pw': 'o', 

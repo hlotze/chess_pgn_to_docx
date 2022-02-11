@@ -1,5 +1,5 @@
+# pylint: disable=import-error
 """functions for the eco mgmt of chess games"""
-from __future__ import print_function
 
 import io
 import sys
@@ -19,19 +19,19 @@ import pandas as pd
 #print('at eco.py:', __file__)
 #print(os.path.dirname(os.path.realpath(__file__)))
 
-eco_filename = os.path.dirname(os.path.realpath(__file__))+'/eco.zip'
-if not os.path.isfile(eco_filename):
-    print(f'file \'{eco_filename}\' does not exits')
+ECO_FILENAME = os.path.dirname(os.path.realpath(__file__))+'/eco.zip'
+if not os.path.isfile(ECO_FILENAME):
+    print(f'file \'{ECO_FILENAME}\' does not exits')
     sys.exit(1)
 
-eco_df = pd.read_csv(eco_filename,
+ECO_DF = pd.read_csv(ECO_FILENAME,
                      sep=',',
                      header=0,
                      compression={'method': 'zip'})
 # 'eco_df' provides the ECO data
 #####################################
 
-eco_test_data_dict = {
+ECO_TEST_DATA_DICT = {
     'eco' : 'B05',
     'pgn' : '1.e4 Nf6 2.e5 Nd5 3.d4 d6 4.Nf3 Bg4 ' + \
             '5.Bc4 e6 6.O-O Nb6 7.Be2 Be7 8.h3 Bh5 ' + \
@@ -43,7 +43,7 @@ eco_test_data_dict = {
             '28.Bd4 Nc6 29.Rb5 Nxd4 30.Nxd4 Nxc3 31.Nxc3 ' + \
             'Rxd4 32.Ne2 Ra4 33.Ke1 Rxa3 34.Rab1 Bb4+ 35.Kf1 Rd3  0-1'}
 
-def normalize_pgn_string(pgn:str) -> str:
+def normalize_pgn_string(pgn: str) -> str:
     """Return a normalized pgn string, e.g.
     '1.g4 d5 2.Bg2 c6' will be normalized to
     '1. g4 d5 2. Bg2 c6'"""
@@ -63,10 +63,10 @@ def get_eco_data_for(eco=None, pgn=None) -> dict:
 
     found_eco_dict = {}
     # do we have an ECO code
-    if '' != eco:
+    if eco != '':
         # get all entries from pgn.eco_df
         # that fits to given eco_code
-        filtered_eco_data_df = eco_df[eco == eco_df['eco']] #.copy()
+        filtered_eco_data_df = ECO_DF[eco == ECO_DF['eco']] #.copy()
         rev_sorted_eco_data_df = filtered_eco_data_df.sort_values('pgn', ascending=False) #.copy()
         for _, row in rev_sorted_eco_data_df.iterrows():
             #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
@@ -78,7 +78,7 @@ def get_eco_data_for(eco=None, pgn=None) -> dict:
     # and no related ECO data found
     # do it again and check with complete database
     if not bool(found_eco_dict):
-        eco_data_df = eco_df #.copy()
+        eco_data_df = ECO_DF #.copy()
         rev_sorted_eco_data_df = eco_data_df.sort_values('pgn', ascending=False) #.copy()
         for _, row in rev_sorted_eco_data_df.iterrows():
             #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
@@ -90,13 +90,13 @@ def get_eco_data_for(eco=None, pgn=None) -> dict:
 def main():
     """some test for the eco.py"""
     print('test data')
-    print(eco_test_data_dict)
+    print(ECO_TEST_DATA_DICT)
 
     print('normalized PGN')
-    print(normalize_pgn_string(eco_test_data_dict['pgn']))
+    print(normalize_pgn_string(ECO_TEST_DATA_DICT['pgn']))
 
     print('complete ECO data for that PGN')
-    res_dict = get_eco_data_for(eco=eco_test_data_dict['eco'], pgn=eco_test_data_dict['pgn'])
+    res_dict = get_eco_data_for(eco=ECO_TEST_DATA_DICT['eco'], pgn=ECO_TEST_DATA_DICT['pgn'])
     print(res_dict)
 
 if __name__ == '__main__':

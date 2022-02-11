@@ -1,5 +1,5 @@
+# pylint: disable=import-error
 """functions for pgn mgmt, and docx generation"""
-from __future__ import print_function
 
 import io
 import os
@@ -25,7 +25,7 @@ import eco
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-def get_games_from_pgnfile(file_name:str)->pd.DataFrame:
+def get_games_from_pgnfile(file_name: str) -> pd.DataFrame:
     """Return a DataFrame with all games of the file_name, incl. headers and pgn game notation."""
     with open(file_name, "r", encoding='utf-8') as pgn_file:
         games_df = pd.DataFrame()
@@ -152,7 +152,7 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
         return OxmlElement(name)
 
     def create_attribute(element, name, value):
-        return(element.set(ns.qn(name), value))
+        return element.set(ns.qn(name), value)
 
     def add_page_number(paragraph):
         page_run = paragraph.add_run()
@@ -205,7 +205,8 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
     # first page of the booklet
     out_str = ''
     for key in game_dict.keys():
-        if 'file' != key and 'pgn' != key:
+        #if (key != 'file' and key != 'pgn'):
+        if key not in ('file', 'pgn'):
             out_str = out_str + '[{k}] \"{v}\"\n'.format(k=key, v=game_dict[key])
 
     out_str = out_str + '\n'
@@ -296,7 +297,7 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
         brd_fnt.size = Pt(20)
 
         if index == len(boards_df)-1:
-            if 0 == len(fmv['b_hmv_str']):
+            if len(fmv['b_hmv_str']) == 0:
                 fmv['w_hmv_str'] = fmv['w_hmv_str'] + '   ' + game_dict['Result']
             else:
                 fmv['b_hmv_str'] = fmv['b_hmv_str'] + '   ' + game_dict['Result']
@@ -312,7 +313,7 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
     return doc
 
 
-def get_incremented_filename(filename:str)->str:
+def get_incremented_filename(filename: str) -> str:
     """Return the given filename if exists with an increment"""
     name, ext = os.path.splitext(filename)
     seq = 0
@@ -328,7 +329,7 @@ def get_incremented_filename(filename:str)->str:
     return filename
 
 
-def store_document(doc: Document, file_name: str)-> dict:
+def store_document(doc: Document, file_name: str) -> dict:
     """Return a dict{'done' : True,
     'file_name' : <file_name>} after
     Document is stored at 'file_name'"""
@@ -361,11 +362,11 @@ def main():
     if 'ECO' in one_game_dict.keys():
         eco_result_dict = \
             eco.get_eco_data_for(eco=one_game_dict['ECO'], \
-                                    pgn=one_game_dict['pgn'])
+                                 pgn=one_game_dict['pgn'])
     else:
         eco_result_dict = \
             eco.get_eco_data_for(eco='',
-                                    pgn=one_game_dict['pgn'])
+                                 pgn=one_game_dict['pgn'])
 
     my_doc = gen_document_from_game(one_game_dict,
                                     eco_result_dict)
@@ -376,13 +377,13 @@ def main():
     site = one_game_dict['Site'].replace(
         '/', '_').replace(':', '_').replace('.', '-')
 
-    fname = 'DOCX/TEST/' + one_game_dict['Date'].replace( '.', '-') + \
+    fname = 'DOCX/TEST/' + one_game_dict['Date'].replace('.', '-') + \
                         '_' + \
                         event + '_' + \
                         site + '_( ' + \
                         one_game_dict['White'] + ' - ' + \
                         one_game_dict['Black'] + ' ).docx'
-    fname = fname.replace('??','_')
+    fname = fname.replace('??', '_')
 
     # store document
     ret_dict = store_document(my_doc, fname)

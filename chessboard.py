@@ -1,9 +1,8 @@
+# pylint: disable=import-error
 """functions for chessboard mgmt, and TTF mapping"""
-from __future__ import print_function
 
 import chess
 import numpy as np
-
 
 # chessboard:  white view
 #    top    files black pieces - lowercase chars,
@@ -23,7 +22,7 @@ import numpy as np
 
 # These TTF works with the mapping at 'font_dict',
 # I prefer 'Chess Merida'
-TTF_dict = {
+TTF_DICT = {
     'Chess Condal': 'CONDFONT.TTF',
     'Chess Kingdom': 'KINGFONT.TTF',
     'Chess Leipzig': 'LEIPFONT.TTF',
@@ -54,7 +53,7 @@ TTF_dict = {
 #   import codecs
 #   print(codecs.decode(b'\xf1\xf2\xf3\xf4', 'iso-8859-9') )
 
-font_dict = {
+FONT_DICT = {
     # squares
     #   1st char --> piece
     #   2nd char --> square color b_lack or w_hite
@@ -198,7 +197,7 @@ def arr_flip(cb_arr: np.ndarray) -> np.ndarray:
 
 def str_flip(cb_str: str) -> str:
     """Return the chessboard string as flipped string"""
-    return(arr2str(arr_flip(str2arr(cb_str))))
+    return arr2str(arr_flip(str2arr(cb_str)))
 
 
 def str_isflipped(cb1_str: str, cb2_str: str) -> bool:
@@ -212,7 +211,7 @@ def arr_isflipped(cb1_arr: np.ndarray, cb2_arr: np.ndarray) -> bool:
     """Return the comparism of 2 chessboards'
        ndarrays, if the 2nd is identical
        but flipped to the 1st"""
-    return(np.array_equal(cb1_arr, arr_flip(cb2_arr)))
+    return np.array_equal(cb1_arr, arr_flip(cb2_arr))
 
 
 def isflipped(cb1, cb2) -> bool:
@@ -237,7 +236,7 @@ def str2ttf(cb_str: str) -> str:
     for x_coord in range(10):
         line = ''
         for y_coord in range(10):
-            line += font_dict[cb_arr[x_coord, y_coord]].format('b')
+            line += FONT_DICT[cb_arr[x_coord, y_coord]].format('b')
         cb_ttf_str += line + '\n'
     return cb_ttf_str
 
@@ -248,7 +247,7 @@ def arr2ttf(cb_arr: np.ndarray) -> str:
     for x_coord in range(10):
         line = ''
         for y_coord in range(10):
-            line += font_dict[str(cb_arr[x_coord, y_coord])].format('b')
+            line += FONT_DICT[str(cb_arr[x_coord, y_coord])].format('b')
         cb_ttf_str += line + '\n'
     return cb_ttf_str
 
@@ -337,7 +336,7 @@ def board2arr(board: chess.Board) -> np.ndarray:
     # put into an empty board
     for rank in range(8):
         for file in range(8):
-            if '_' != board_arr[rank][file]:
+            if board_arr[rank][file] != '_':
                 out = str(out_arr[rank+1][file+1]).replace( \
                     '-', str(board_arr[rank][file]))
                 out_arr[rank+1][file+1] = out
@@ -346,12 +345,12 @@ def board2arr(board: chess.Board) -> np.ndarray:
 
 def board2str(board: chess.Board) -> str:
     """Return the chessboard str from a 'chess.board'"""
-    return(arr2str(board2arr(board)))
+    return arr2str(board2arr(board))
 
 
 def board2ttf(board: chess.Board) -> str:
     """Return the chessboard TTF from a 'chess.board'"""
-    return(str2ttf(arr2str(board2arr(board))))
+    return str2ttf(arr2str(board2arr(board)))
 
 
 def main():
