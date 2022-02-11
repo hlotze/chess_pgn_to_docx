@@ -14,10 +14,7 @@ import pandas as pd
 # get the eco.csv
 #   see https://www3.diism.unisi.it/~addabbo/ECO_aperture_scacchi.html
 #
-# as a pd.DataFrame: eco_df
-
-#print('at eco.py:', __file__)
-#print(os.path.dirname(os.path.realpath(__file__)))
+# as a pd.DataFrame: ECO_DF
 
 ECO_FILENAME = os.path.dirname(os.path.realpath(__file__))+'/eco.zip'
 if not os.path.isfile(ECO_FILENAME):
@@ -28,7 +25,7 @@ ECO_DF = pd.read_csv(ECO_FILENAME,
                      sep=',',
                      header=0,
                      compression={'method': 'zip'})
-# 'eco_df' provides the ECO data
+# 'ECO_DF' provides the ECO data
 #####################################
 
 ECO_TEST_DATA_DICT = {
@@ -49,6 +46,8 @@ def normalize_pgn_string(pgn: str) -> str:
     '1. g4 d5 2. Bg2 c6'"""
     game = chess.pgn.read_game(io.StringIO(pgn))
     normed_pgn_str = game.board().variation_san(game.mainline_moves())
+    if len(game.errors) > 0:
+        print(pgn)
     return normed_pgn_str
 
 def get_eco_data_for(eco=None, pgn=None) -> dict:
