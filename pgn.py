@@ -351,7 +351,7 @@ def main():
     #   pgn.main pgn_dir to whatever you need
     # the line here :
     ##################################################
-    pgn_name = 'PGN/TEST/test_do_not_change.pgn'
+    pgn_name = 'test/pgn/test_do_not_change.pgn'
 
     # start to get the games out of one pgn file
     games_df = get_games_from_pgnfile(pgn_name)
@@ -377,7 +377,7 @@ def main():
     site = one_game_dict['Site'].replace(
         '/', '_').replace(':', '_').replace('.', '-')
 
-    fname = 'DOCX/TEST/' + one_game_dict['Date'].replace('.', '-') + \
+    fname = 'test/docx/' + one_game_dict['Date'].replace('.', '-') + \
                         '_' + \
                         event + '_' + \
                         site + '_( ' + \

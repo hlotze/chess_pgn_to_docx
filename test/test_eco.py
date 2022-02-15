@@ -1,7 +1,8 @@
+"""Fuctions related to the eco classification"""
+from context import eco
 
 import unittest
 
-import eco as eco
 
 
 class Test_unittest(unittest.TestCase):

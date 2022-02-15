@@ -1,7 +1,8 @@
-
+"""Functions concerning pgn checks and docx generation"""
 import unittest
 
-import pgn as pgn
+from context import pgn
+
 
 
 
@@ -15,14 +16,14 @@ class Test_unittest(unittest.TestCase):
     # Test 2
     def test_get_games_from_pgnfile(self):
         # 'PGN/TEST/test_do_not_change.pgn' should contain 5 PGN games
-        self.assertEqual(True, 5 == len(pgn.get_games_from_pgnfile('PGN/TEST/test_do_not_change.pgn')))
+        self.assertEqual(True, len(pgn.get_games_from_pgnfile('test/pgn/test_do_not_change.pgn')) == 5)
 
     # Test 3
     def test_get_incremented_filename(self):
-        # existing file 'DOCX/TEST/test_do_not_change' shall not be overwriten,
+        # existing file 'docx_test_datatest_do_not_change' shall not be overwriten,
         # but a new file with incremented numbering shall be chosen as the new 
-        # file name; for the test: 'DOCX/TEST/test_do_not_change-1'
-        self.assertEqual(True, 'DOCX/TEST/test_do_not_change-1' == pgn.get_incremented_filename('DOCX/TEST/test_do_not_change'))
+        # file name; for the test: 'docx_test_data/test_do_not_change-1'
+        self.assertEqual(True, pgn.get_incremented_filename('test/docx/test_do_not_change') == 'test/docx/test_do_not_change-1')
         
     # Test 4
     def test_prep_ttfboards_from_pgn(self):

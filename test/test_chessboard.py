@@ -1,5 +1,7 @@
+"""Fuctions related to the chessboard"""
 # pylint: disable=import-error
-import chessboard as cb
+
+from context import chessboard as cb
 
 import numpy as np
 import chess
