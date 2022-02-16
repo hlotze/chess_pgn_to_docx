@@ -1,8 +1,8 @@
 __pycache__
 .vscode
-setup.py
+
 __OLD
 my_secrets.py
 my_snippets.ipynb
 versions.py
-MANIFEST.in
+
