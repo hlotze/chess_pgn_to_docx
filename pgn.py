@@ -378,11 +378,11 @@ def main():
         '/', '_').replace(':', '_').replace('.', '-')
 
     fname = 'test/docx/' + one_game_dict['Date'].replace('.', '-') + \
-                        '_' + \
-                        event + '_' + \
-                        site + '_( ' + \
-                        one_game_dict['White'] + ' - ' + \
-                        one_game_dict['Black'] + ' ).docx'
+            '_' + \
+            event + '_' + \
+            site + '_( ' + \
+            one_game_dict['White'] + ' - ' + \
+            one_game_dict['Black'] + ' ).docx'
     fname = fname.replace('??', '_')
 
     # store document
