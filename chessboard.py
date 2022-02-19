@@ -9,14 +9,14 @@ import numpy as np
 #    bottom files white pieces - uppercase chars
 #
 # tl -- -- -- -- -- -- -- -- tr
-# 8| rw nb bw qw kw bb nw rb ||  # |x that marks the site to move, at file 8 --> black
+# 8| rw nb bw qw kw bb nw rb ||
 # 7| pb pw pb pw pb pw pb pw ||
 # 6| -w -b -w -b -w -b -w -b ||
 # 5| -b -w -b -w -b -w -b -w ||
 # 4| -w -b -w -b -w -b -w -b ||
 # 3| -b -w -b -w -b -w -b -w ||
 # 2| Pw Pb Pw Pb Pw Pb Pw Pb ||
-# 1| Rb Nw Bb Qw Kb Bw Nb Rw ||  # |x that marks the site to move, at file 1 --> white
+# 1| Rb Nw Bb Qw Kb Bw Nb Rw ||
 # bl a- b- c- d- e- f- g- h- br
 
 
@@ -28,25 +28,6 @@ TTF_DICT = {
     'Chess Leipzig': 'LEIPFONT.TTF',
     'Chess Merida': 'MERIFONT.TTF'
 }
-# docu and mapping see: https://candyfonts.com/font/chess-leipzig.htm
-# codes are for usage in
-#   MS Word or
-#   LibreOffice Writer
-#
-# if using for HTML generation
-# you may add to your HTML page
-#
-#   <style type="text/css">
-#     @font-face {
-#       font-family:"chess-leipzig";
-#       src:url("https://candyfonts.com/wp-data/2019/03/03/22938/LEIPFONT.TTF") format("woff"),
-#       url("https://candyfonts.com/wp-data/2019/03/03/22938/LEIPFONT.TTF") format("opentype"),
-#       url("https://candyfonts.com/wp-data/2019/03/03/22938/LEIPFONT.TTF") format("truetype");
-#     }
-#     htm_tag{font-family:"chess-leipzig";font-size:40px;text-transform:none;color:#F32951}
-#   </style>
-#
-# and translate e.g. the given '\x20' to HTML '&#x20;'
 
 # these maping to use e.g.
 #
@@ -337,7 +318,7 @@ def board2arr(board: chess.Board) -> np.ndarray:
     for rank in range(8):
         for file in range(8):
             if board_arr[rank][file] != '_':
-                out = str(out_arr[rank+1][file+1]).replace( \
+                out = str(out_arr[rank+1][file+1]).replace(
                     '-', str(board_arr[rank][file]))
                 out_arr[rank+1][file+1] = out
     return np.array(out_arr)
@@ -377,9 +358,11 @@ def main():
     print(board2str(chess.Board()))
 
     print('Chessboard - White - FEN')
-    print('FEN: r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4')
+    print('FEN: r1bqkb1r/pppp1Qpp/2n2n2/4p3/' +
+          '2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4')
     board = chess.Board(
-        'r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4')
+        'r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/' +
+        '8/PPPP1PPP/RNB1K1NR b KQkq - 0 4')
     print(board2str(board))
 
     print('Chessboard - White - FEN --> TTF')

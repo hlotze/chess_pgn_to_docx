@@ -1,4 +1,7 @@
 # pylint: disable=import-error
+# pylint: disable=protected-access
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-statements
 """functions for pgn mgmt, and docx generation"""
 
 import io
@@ -111,7 +114,9 @@ def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
     return full_moves_df
 
 
-def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess Merida')->Document:
+def gen_document_from_game(game_dict: dict,
+                           eco_dict: dict,
+                           ttf_font_name='Chess Merida')->Document:
     """Return a docx.Document Din A4 with the chess diagrams for a given game_dict"""
 
     # if ttf_font_name not in cb.TTF_dict.keys():
@@ -156,47 +161,47 @@ def gen_document_from_game(game_dict: dict, eco_dict: dict, ttf_font_name='Chess
 
     def add_page_number(paragraph):
         page_run = paragraph.add_run()
-        t1 = create_element('w:t')
-        create_attribute(t1, 'xml:space', 'preserve')
-        t1.text = 'Page '
-        page_run._r.append(t1)
+        elem_t1 = create_element('w:t')
+        create_attribute(elem_t1, 'xml:space', 'preserve')
+        elem_t1.text = 'Page '
+        page_run._r.append(elem_t1)
 
         page_num_run = paragraph.add_run()
 
-        fldChar1 = create_element('w:fldChar')
-        create_attribute(fldChar1, 'w:fldCharType', 'begin')
+        fld_char1 = create_element('w:fldChar')
+        create_attribute(fld_char1, 'w:fldCharType', 'begin')
 
-        instrText = create_element('w:instrText')
-        create_attribute(instrText, 'xml:space', 'preserve')
-        instrText.text = "PAGE"
+        instr_text = create_element('w:instr_text')
+        create_attribute(instr_text, 'xml:space', 'preserve')
+        instr_text.text = "PAGE"
 
-        fldChar2 = create_element('w:fldChar')
-        create_attribute(fldChar2, 'w:fldCharType', 'end')
+        fld_char2 = create_element('w:fldChar')
+        create_attribute(fld_char2, 'w:fldCharType', 'end')
 
-        page_num_run._r.append(fldChar1)
-        page_num_run._r.append(instrText)
-        page_num_run._r.append(fldChar2)
+        page_num_run._r.append(fld_char1)
+        page_num_run._r.append(instr_text)
+        page_num_run._r.append(fld_char2)
 
         of_run = paragraph.add_run()
-        t2 = create_element('w:t')
-        create_attribute(t2, 'xml:space', 'preserve')
-        t2.text = ' of '
-        of_run._r.append(t2)
+        elem_t2 = create_element('w:t')
+        create_attribute(elem_t2, 'xml:space', 'preserve')
+        elem_t2.text = ' of '
+        of_run._r.append(elem_t2)
 
-        fldChar3 = create_element('w:fldChar')
-        create_attribute(fldChar3, 'w:fldCharType', 'begin')
+        fld_char3 = create_element('w:fldChar')
+        create_attribute(fld_char3, 'w:fldCharType', 'begin')
 
-        instrText2 = create_element('w:instrText')
-        create_attribute(instrText2, 'xml:space', 'preserve')
-        instrText2.text = "NUMPAGES"
+        instr_text2 = create_element('w:instr_text')
+        create_attribute(instr_text2, 'xml:space', 'preserve')
+        instr_text2.text = "NUMPAGES"
 
-        fldChar4 = create_element('w:fldChar')
-        create_attribute(fldChar4, 'w:fldCharType', 'end')
+        fld_char4 = create_element('w:fldChar')
+        create_attribute(fld_char4, 'w:fldCharType', 'end')
 
         num_pages_run = paragraph.add_run()
-        num_pages_run._r.append(fldChar3)
-        num_pages_run._r.append(instrText2)
-        num_pages_run._r.append(fldChar4)
+        num_pages_run._r.append(fld_char3)
+        num_pages_run._r.append(instr_text2)
+        num_pages_run._r.append(fld_char4)
 
     add_page_number(doc.sections[0].footer.paragraphs[0])
     doc.sections[0].footer.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
