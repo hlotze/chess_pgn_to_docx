@@ -1,4 +1,5 @@
 # pylint: disable=wrong-import-position
+# pylint: disable=unused-import
 """Helper for imports"""
 import os
 import sys

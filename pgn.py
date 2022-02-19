@@ -28,6 +28,16 @@ import eco
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
+def get_pgnfile_names_from_dir(pgn_dir='PGN/', ext='.pgn') -> list:
+    """Return a python list with filenames
+       from a given directory and given extension '.pgn' '.PGN'"""
+    file_names_list = []
+    for file in os.listdir(pgn_dir):
+        if file.endswith(ext) or file.endswith(ext.upper()):
+            if os.path.isfile(os.path.join(pgn_dir, file)):
+                file_names_list.append(os.path.join(pgn_dir, file))
+    return sorted(file_names_list)
+
 def get_games_from_pgnfile(file_name: str) -> pd.DataFrame:
     """Return a DataFrame with all games of the file_name, incl. headers and pgn game notation."""
     with open(file_name, "r", encoding='utf-8') as pgn_file:
