@@ -1,6 +1,6 @@
 __pycache__
 .vscode
-
+.env
 __OLD
 my_secrets.py
 my_snippets.ipynb
