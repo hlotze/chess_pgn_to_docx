@@ -130,7 +130,8 @@ def gen_document_from_game(game_dict: dict,
     """Return a docx.Document Din A4 with the chess diagrams for a given game_dict"""
 
     # if ttf_font_name not in cb.TTF_dict.keys():
-    #     print(f'You choose TTF {ttf_font_name}, which is not is my list of fonts to chose from:')
+    #     print(f'You choose TTF {ttf_font_name},
+    #     which is not is my list of fonts to chose from:')
     #     for font in cb.TTF_dict.keys():
     #         print(f'  - {font] with {cb.TTF_dict[font]}')
     #     print('Please install the font you want.')
@@ -140,21 +141,27 @@ def gen_document_from_game(game_dict: dict,
 
     #  set to A4 --------------------------------------
     # see
-    #   https://stackoverflow.com/questions/43724030/how-to-change-page-size-to-a4-in-python-docx
+    #   https://stackoverflow.com/questions/43724030
+    #   /how-to-change-page-size-to-a4-in-python-docx
     section = doc.sections[0]
     section.page_height = Mm(297)
     section.page_width = Mm(210)
     section.left_margin = Mm(30)
     section.right_margin = Mm(25)
-    section.top_margin = Mm(30)
-    section.bottom_margin = Mm(15)
-    section.header_distance = Mm(15)
-    section.footer_distance = Mm(10)
+
+    section.header_height = Inches(0.2)
+    section.bottom_height = Inches(0.2)
+
+    #section.top_margin = Inches(0.4)
+    #section.bottom_margin = Inches(0.4)
+
+    #section.header_distance = Inches(0.1)
+    #section.footer_distance = Inches(0.1)
     #  set to A4 --------------------------------------
 
     # doc header --------------------------------------
     header = doc.sections[0].header
-    header.bottom_margin = Inches(0.2)
+    #header.bottom_margin = Inches(0.2)
     head = header.paragraphs[0]
     head.text = f"{game_dict['Date'].replace('.','-')} " + \
         f"{game_dict['Event']}, {game_dict['Site']}\n" + \
@@ -181,7 +188,7 @@ def gen_document_from_game(game_dict: dict,
         fld_char1 = create_element('w:fldChar')
         create_attribute(fld_char1, 'w:fldCharType', 'begin')
 
-        instr_text = create_element('w:instr_text')
+        instr_text = create_element('w:instrText')
         create_attribute(instr_text, 'xml:space', 'preserve')
         instr_text.text = "PAGE"
 
@@ -201,7 +208,7 @@ def gen_document_from_game(game_dict: dict,
         fld_char3 = create_element('w:fldChar')
         create_attribute(fld_char3, 'w:fldCharType', 'begin')
 
-        instr_text2 = create_element('w:instr_text')
+        instr_text2 = create_element('w:instrText')
         create_attribute(instr_text2, 'xml:space', 'preserve')
         instr_text2.text = "NUMPAGES"
 
@@ -299,7 +306,8 @@ def gen_document_from_game(game_dict: dict,
         brd_run = brd_cell_paragraph.runs
         brd_fnt = brd_run[0].font
         brd_fnt.name = ttf_font_name
-        brd_fnt.size = Pt(20)
+        brd_fnt.size = Pt(16)
+
         brd_row.cells[1].text = fmv['b_board_ttf'][:-1]
         brd_cell_paragraph = brd_row.cells[1].paragraphs[0]
         brd_cell_paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
@@ -309,7 +317,7 @@ def gen_document_from_game(game_dict: dict,
         brd_run = brd_cell_paragraph.runs
         brd_fnt = brd_run[0].font
         brd_fnt.name = ttf_font_name
-        brd_fnt.size = Pt(20)
+        brd_fnt.size = Pt(16)
 
         if index == len(boards_df)-1:
             if len(fmv['b_hmv_str']) == 0:
@@ -318,12 +326,17 @@ def gen_document_from_game(game_dict: dict,
                 fmv['b_hmv_str'] = fmv['b_hmv_str'] + '   ' + game_dict['Result']
         # the SAN below the board diagrams
         brd_row = boards_tbl.rows[2*index+1]
+
         brd_row.cells[0].text = fmv['w_hmv_str']
         brd_row.cells[0].paragraphs[0].style.font.name = 'Verdana'
+        brd_row.cells[0].paragraphs[0].style.font.size = Pt(9)
         brd_row.cells[0].paragraphs[0].paragraph_format.space_after = Pt(0)
+
         brd_row.cells[1].text = fmv['b_hmv_str']
         brd_row.cells[1].paragraphs[0].style.font.name = 'Verdana'
+        brd_row.cells[0].paragraphs[0].style.font.size = Pt(9)
         brd_row.cells[1].paragraphs[0].paragraph_format.space_after = Pt(0)
+
     #  PGN diagramms --------------------------------------
     return doc
 
