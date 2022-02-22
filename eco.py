@@ -40,6 +40,61 @@ ECO_TEST_DATA_DICT = {
             '28.Bd4 Nc6 29.Rb5 Nxd4 30.Nxd4 Nxc3 31.Nxc3 ' + \
             'Rxd4 32.Ne2 Ra4 33.Ke1 Rxa3 34.Rab1 Bb4+ 35.Kf1 Rd3  0-1'}
 
+
+#####################################
+# new eco procedure
+#####################################
+
+NEW_ECO_FILENAME = os.path.dirname(os.path.realpath(__file__))+'/eco.csv'
+if not os.path.isfile(ECO_FILENAME):
+    print(f'file \'{ECO_FILENAME}\' does not exits')
+    sys.exit(1)
+
+NEW_ECO_DF = pd.read_csv(NEW_ECO_FILENAME,
+                         sep=',',
+                         header=0,
+                         usecols=["eco", "title", "pgn",
+                                  "last_ply",
+                                  "sq_from", "sq_to", "sq_check",
+                                  "fen"])
+
+def new_get_eco_data_for(eco=None, pgn=None) -> dict:
+    """Return the ECO data for the given ECO and PGN, even if ECO is wrong or missing"""
+    if eco is None:
+        eco = ''
+    if pgn is None:
+        sys.exit("error: no pgn given at 'get_eco_data_for()'")
+
+    # normalize the pgn string
+    pgn = normalize_pgn_string(pgn)
+
+    found_eco_dict = {}
+    # do we have an ECO code
+    if eco != '':
+        # get all entries from pgn.eco_df
+        # that fits to given eco_code
+        filtered_eco_data_df = NEW_ECO_DF[eco == NEW_ECO_DF['eco']] #.copy()
+        rev_sorted_eco_data_df = filtered_eco_data_df.sort_values('pgn', ascending=False) #.copy()
+        for _, row in rev_sorted_eco_data_df.iterrows():
+            #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
+            if row['pgn'] == pgn[:len(row['pgn'])]:
+                found_eco_dict = row.to_dict()
+                break
+
+    # if no ECO available or given ECO is wrong
+    # and no related ECO data found
+    # do it again and check with complete database
+    if not bool(found_eco_dict):
+        eco_data_df = NEW_ECO_DF #.copy()
+        rev_sorted_eco_data_df = eco_data_df.sort_values('pgn', ascending=False) #.copy()
+        for _, row in rev_sorted_eco_data_df.iterrows():
+            #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
+            if row['pgn'] == pgn[:len(row['pgn'])]:
+                found_eco_dict = row.to_dict()
+                break
+    return found_eco_dict
+
+
 def normalize_pgn_string(pgn: str) -> str:
     """Return a normalized pgn string, e.g.
     '1.g4 d5 2.Bg2 c6' will be normalized to
@@ -96,6 +151,10 @@ def main():
 
     print('complete ECO data for that PGN')
     res_dict = get_eco_data_for(eco=ECO_TEST_DATA_DICT['eco'], pgn=ECO_TEST_DATA_DICT['pgn'])
+    print(res_dict)
+
+    print('\nNEW complete ECO data for that PGN')
+    res_dict = new_get_eco_data_for(eco=ECO_TEST_DATA_DICT['eco'], pgn=ECO_TEST_DATA_DICT['pgn'])
     print(res_dict)
 
 if __name__ == '__main__':
