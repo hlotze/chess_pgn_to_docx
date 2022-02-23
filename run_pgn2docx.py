@@ -14,7 +14,7 @@ import pgn
 
 
 def main():
-    """Return the genrated docx"""
+    """Return the generated docx"""
     ##################################################
     # for development just use
     #   'PGN/TEST/test_do_not_change.pgn' with 5 games
@@ -43,11 +43,13 @@ def main():
 
                 eco_result_dict = {}
                 if 'ECO' in one_game_dict.keys():
-                    eco_result_dict = eco.get_eco_data_for(eco=one_game_dict['ECO'],
-                                                           pgn=one_game_dict['pgn'])
+                    eco_result_dict = eco.new_get_eco_data_for( \
+                        eco=one_game_dict['ECO'],
+                        pgn=one_game_dict['pgn'])
                 else:
-                    eco_result_dict = eco.get_eco_data_for(eco='',
-                                                           pgn=one_game_dict['pgn'])
+                    eco_result_dict = eco.new_get_eco_data_for( \
+                        eco='',
+                        pgn=one_game_dict['pgn'])
 
                 my_doc = pgn.gen_document_from_game(one_game_dict,
                                                     eco_result_dict,

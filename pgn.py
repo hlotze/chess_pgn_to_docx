@@ -244,9 +244,9 @@ def gen_document_from_game(game_dict: dict,
             # no eco section to print, e.g no eco found
             pass
         else:
-            eco_txt = f"{eco_dict['eco'][0]} - {eco_dict['group']}\n" + \
-                f"{eco_dict['eco']} - {eco_dict['subgroup'].replace('?','')} \n" + \
-                f"{eco_dict['variant'].replace('?','')} \n{eco_dict['pgn']} \n"
+            eco_txt = \
+                f"{eco_dict['eco']} - {eco_dict['title']}\n" + \
+                f"{eco_dict['pgn']} \n"
 
             doc.add_paragraph(eco_txt)
 
@@ -263,8 +263,9 @@ def gen_document_from_game(game_dict: dict,
             eco_fnt = eco_run[0].font
             eco_fnt.name = ttf_font_name
             eco_fnt.size = Pt(20)
+
             eco_row = eco_tbl.rows[1]
-            eco_row.cells[0].text = eco_dict['mv']
+            eco_row.cells[0].text = eco_dict['last_ply']
             eco_row.cells[0].paragraphs[0].style.font.name = 'Verdana'
             eco_row.cells[0].paragraphs[0].paragraph_format.space_after = Pt(0)
 
@@ -389,11 +390,11 @@ def main():
     eco_result_dict = {}
     if 'ECO' in one_game_dict.keys():
         eco_result_dict = \
-            eco.get_eco_data_for(eco=one_game_dict['ECO'], \
+            eco.new_get_eco_data_for(eco=one_game_dict['ECO'], \
                                  pgn=one_game_dict['pgn'])
     else:
         eco_result_dict = \
-            eco.get_eco_data_for(eco='',
+            eco.new_get_eco_data_for(eco='',
                                  pgn=one_game_dict['pgn'])
 
     my_doc = gen_document_from_game(one_game_dict,

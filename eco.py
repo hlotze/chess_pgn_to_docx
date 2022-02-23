@@ -10,23 +10,23 @@ import chess.pgn
 import pandas as pd
 
 
-#####################################
-# get the eco.csv
-#   see https://www3.diism.unisi.it/~addabbo/ECO_aperture_scacchi.html
-#
-# as a pd.DataFrame: ECO_DF
+# #####################################
+# # get the eco.csv
+# #   see https://www3.diism.unisi.it/~addabbo/ECO_aperture_scacchi.html
+# #
+# # as a pd.DataFrame: ECO_DF
 
-ECO_FILENAME = os.path.dirname(os.path.realpath(__file__))+'/eco.zip'
-if not os.path.isfile(ECO_FILENAME):
-    print(f'file \'{ECO_FILENAME}\' does not exits')
-    sys.exit(1)
+# ECO_FILENAME = os.path.dirname(os.path.realpath(__file__))+'/eco.zip'
+# if not os.path.isfile(ECO_FILENAME):
+#     print(f'file \'{ECO_FILENAME}\' does not exits')
+#     sys.exit(1)
 
-ECO_DF = pd.read_csv(ECO_FILENAME,
-                     sep=',',
-                     header=0,
-                     compression={'method': 'zip'})
-# 'ECO_DF' provides the ECO data
-#####################################
+# ECO_DF = pd.read_csv(ECO_FILENAME,
+#                      sep=',',
+#                      header=0,
+#                      compression={'method': 'zip'})
+# # 'ECO_DF' provides the ECO data
+# #####################################
 
 ECO_TEST_DATA_DICT = {
     'eco' : 'B05',
@@ -46,8 +46,8 @@ ECO_TEST_DATA_DICT = {
 #####################################
 
 NEW_ECO_FILENAME = os.path.dirname(os.path.realpath(__file__))+'/eco.csv'
-if not os.path.isfile(ECO_FILENAME):
-    print(f'file \'{ECO_FILENAME}\' does not exits')
+if not os.path.isfile(NEW_ECO_FILENAME):
+    print(f'file \'{NEW_ECO_FILENAME}\' does not exits')
     sys.exit(1)
 
 NEW_ECO_DF = pd.read_csv(NEW_ECO_FILENAME,
@@ -105,41 +105,41 @@ def normalize_pgn_string(pgn: str) -> str:
         print(pgn)
     return normed_pgn_str
 
-def get_eco_data_for(eco=None, pgn=None) -> dict:
-    """Return the ECO data for the given ECO and PGN, even if ECO is wrong or missing"""
-    if eco is None:
-        eco = ''
-    if pgn is None:
-        sys.exit("error: no pgn given at 'get_eco_data_for()'")
+# def get_eco_data_for(eco=None, pgn=None) -> dict:
+#     """Return the ECO data for the given ECO and PGN, even if ECO is wrong or missing"""
+#     if eco is None:
+#         eco = ''
+#     if pgn is None:
+#         sys.exit("error: no pgn given at 'get_eco_data_for()'")
 
-    # normalize the pgn string
-    pgn = normalize_pgn_string(pgn)
+#     # normalize the pgn string
+#     pgn = normalize_pgn_string(pgn)
 
-    found_eco_dict = {}
-    # do we have an ECO code
-    if eco != '':
-        # get all entries from pgn.eco_df
-        # that fits to given eco_code
-        filtered_eco_data_df = ECO_DF[eco == ECO_DF['eco']] #.copy()
-        rev_sorted_eco_data_df = filtered_eco_data_df.sort_values('pgn', ascending=False) #.copy()
-        for _, row in rev_sorted_eco_data_df.iterrows():
-            #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
-            if row['pgn'] == pgn[:len(row['pgn'])]:
-                found_eco_dict = row.to_dict()
-                break
+#     found_eco_dict = {}
+#     # do we have an ECO code
+#     if eco != '':
+#         # get all entries from pgn.eco_df
+#         # that fits to given eco_code
+#         filtered_eco_data_df = ECO_DF[eco == ECO_DF['eco']] #.copy()
+#         rev_sorted_eco_data_df = filtered_eco_data_df.sort_values('pgn', ascending=False) #.copy()
+#         for _, row in rev_sorted_eco_data_df.iterrows():
+#             #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
+#             if row['pgn'] == pgn[:len(row['pgn'])]:
+#                 found_eco_dict = row.to_dict()
+#                 break
 
-    # if no ECO available or given ECO is wrong
-    # and no related ECO data found
-    # do it again and check with complete database
-    if not bool(found_eco_dict):
-        eco_data_df = ECO_DF #.copy()
-        rev_sorted_eco_data_df = eco_data_df.sort_values('pgn', ascending=False) #.copy()
-        for _, row in rev_sorted_eco_data_df.iterrows():
-            #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
-            if row['pgn'] == pgn[:len(row['pgn'])]:
-                found_eco_dict = row.to_dict()
-                break
-    return found_eco_dict
+#     # if no ECO available or given ECO is wrong
+#     # and no related ECO data found
+#     # do it again and check with complete database
+#     if not bool(found_eco_dict):
+#         eco_data_df = ECO_DF #.copy()
+#         rev_sorted_eco_data_df = eco_data_df.sort_values('pgn', ascending=False) #.copy()
+#         for _, row in rev_sorted_eco_data_df.iterrows():
+#             #print('len:', len(row['pgn']), '[',row['pgn'], '] last char:', row['pgn'][-1])
+#             if row['pgn'] == pgn[:len(row['pgn'])]:
+#                 found_eco_dict = row.to_dict()
+#                 break
+#     return found_eco_dict
 
 def main():
     """some test for the eco.py"""
@@ -149,9 +149,9 @@ def main():
     print('normalized PGN')
     print(normalize_pgn_string(ECO_TEST_DATA_DICT['pgn']))
 
-    print('complete ECO data for that PGN')
-    res_dict = get_eco_data_for(eco=ECO_TEST_DATA_DICT['eco'], pgn=ECO_TEST_DATA_DICT['pgn'])
-    print(res_dict)
+    # print('complete ECO data for that PGN')
+    # res_dict = get_eco_data_for(eco=ECO_TEST_DATA_DICT['eco'], pgn=ECO_TEST_DATA_DICT['pgn'])
+    # print(res_dict)
 
     print('\nNEW complete ECO data for that PGN')
     res_dict = new_get_eco_data_for(eco=ECO_TEST_DATA_DICT['eco'], pgn=ECO_TEST_DATA_DICT['pgn'])
