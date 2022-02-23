@@ -32,7 +32,7 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
   - [x] if *Seven Tag Roster* (details at [^1]) is incomplete, e.g. with older games
   - [x] if Site tag is a web address, e.g. https://lichess.org, as file names can not have a ':' or '/'
 - [x] add the game's ECO[^2] incl. diagram
-- [ ] change eco.zip to eco.xlsx; include different languages
+- [x] change eco.csv - no binary format (!) and different eco classification sizes (2k, 10k); see [project wiki eco](https://github.com/hlotze/pgn2docx/wiki/eco))
 - [ ] mark a checked king at the diagrams
 - [ ] mark the from- and to-squares of a half move
 - [ ] add [%eval ...] comments [^3] to the SAN[^4] at bottom of a board
