@@ -412,8 +412,8 @@ def divide_ttf_str(ttf_str: str,
         pos2mark_dict[get_linear_pos(sq_from)] = 'sq_from'
     if sq_to != '':
         pos2mark_dict[get_linear_pos(sq_to)] = 'sq_to'
-    print(my_dict)
-    print(pos2mark_dict)
+    #print(my_dict)
+    #print(pos2mark_dict)
 
     ttf_str_df = pd.DataFrame()
     ttf_str_dict = {}
