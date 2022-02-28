@@ -239,6 +239,33 @@ class TestChessboard(unittest.TestCase):
             cb.board2ttf(chess.Board()),
             cb.str2ttf(cb.START_WHITE_STR))
 
+    # Test 23
+    def test_get_linear_pos_e2(self):
+        """test find linear pos for from e2"""
+        self.assertEqual(
+            cb.get_linear_pos('e2'), 82)
+
+    # Test 24
+    def test_get_linear_pos_e4(self):
+        """test find linear pos for to e4"""
+        self.assertEqual(
+            cb.get_linear_pos('e4'), 60)
+
+    # Test 25
+    def test_divide_ttf_str(self):
+        """test partitioning the ttf str"""
+        # make a chess.board
+        board = chess.Board()
+        # with a move
+        board.push_san("e4")
+        # partition the ttf of the board
+        ttf_parts_df = cb.divide_ttf_str(cb.board2ttf(board), '', 'e2', 'e4')
+        # put parts together for comparism
+        ttf_str = ''
+        for _, ttf_part in enumerate(ttf_parts_df['part']):
+            ttf_str += ttf_part
+        self.assertEqual(
+            cb.board2ttf(board), ttf_str)
 
 if __name__ == '__main__':
     unittest.main()

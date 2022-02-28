@@ -1,5 +1,6 @@
 # pylint: disable=import-error
 """functions for chessboard mgmt, and TTF mapping"""
+import pandas as pd
 
 import chess
 import numpy as np
@@ -333,6 +334,109 @@ def board2ttf(board: chess.Board) -> str:
     """Return the chessboard TTF from a 'chess.board'"""
     return str2ttf(arr2str(board2arr(board)))
 
+# mapping: chess.parse_square(square) to ttf_str position
+SQ_2_TTF_POS_W_DICT = { \
+    56 : 12, 57 : 13, 58 : 14, 59 : 15, 60 : 16, 61 : 17, 62 : 18, 63 : 19, \
+    48 : 23, 49 : 24, 50 : 25, 51 : 26, 52 : 27, 53 : 28, 54 : 29, 55 : 30, \
+    40 : 34, 41 : 35, 42 : 36, 43 : 37, 44 : 38, 45 : 39, 46 : 40, 47 : 41, \
+    32 : 45, 33 : 46, 34 : 47, 35 : 48, 36 : 49, 37 : 50, 38 : 51, 39 : 52, \
+    24 : 56, 25 : 57, 26 : 58, 27 : 59, 28 : 60, 29 : 61, 30 : 62, 31 : 63, \
+    16 : 67, 17 : 68, 18 : 69, 19 : 70, 20 : 71, 21 : 72, 22 : 73, 23 : 74, \
+    8 : 78, 9 : 79, 10 : 80, 11 : 81, 12 : 82, 13 : 83, 14 : 84, 15 : 85, \
+    0 : 89, 1 : 90, 2 : 91, 3 : 92, 4 : 93, 5 : 94, 6 : 95, 7 : 96}
+
+def get_linear_pos(square: str) -> int:
+    """returns the linear pos of a given
+    square at the ttf_str, that has borders"""
+    # example chessboard (here as array)
+    # with
+    #   sq_from -> sq_to
+    #   e2      -> e4
+    #   12      -> 28   chess.parse_square(square)
+    #   82      -> 60   ttf_str position
+    #  0  1  2  3  4  5  6  7  8  9 10
+    # tl -- -- -- -- -- -- -- -- tr \n  0
+    #
+    # 11 12 13 14 15 16 17 18 19 20 21
+    #    56 57 58 59 60 61 62 63
+    # 8| rw nb bw qw kw bb nw rb || \n  1
+    #
+    # 22 23 24 25 26 27 28 29 30 31 32
+    #    48 49 50 51 52 53 54 55
+    # 7| pb pw pb pw pb pw pb pw || \n  2
+    #
+    # 33 34 35 36 37 38 39 40 41 42 43
+    #    40 41 42 43 44 45 46 47
+    # 6| -w -b -w -b -w -b -w -b || \n  3
+    #
+    # 44 45 46 47 48 49 50 51 52 53 54
+    #    32 33 34 35 36 37 38 39
+    # 5| -b -w -b -w -b -w -b -w || \n  4
+    #
+    # 55 56 57 58 59 60 61 62 63 64 65
+    #    24 25 26 27 28 29 30 31
+    # 4| -w -b -w -b Pw -b -w -b || \n  5
+    #
+    # 66 67 68 69 70 71 72 73 74 75 76
+    #    16 17 18 19 20 21 22 23
+    # 3| -b -w -b -w -b -w -b -w || \n  6
+    #
+    # 77 78 79 80 81 82 83 84 85 86 87
+    #     8  9 10 11 12 13 14 15
+    # 2| Pw Pb Pw Pb -w Pb Pw Pb || \n  7
+    #
+    # 88 89 90 91 92 93 94 95 96 97 98
+    #     0  1  2  3  4  5  6  7
+    # 1| Rb Nw Bb Qw Kb Bw Nb Rw || \n  8
+    #
+    # bl a- b- c- d- e- f- g- h- br     9
+    #
+    return SQ_2_TTF_POS_W_DICT[chess.parse_square(square)]
+
+
+def divide_ttf_str(ttf_str: str,
+                   sq_check: str,
+                   sq_from: str,
+                   sq_to: str) -> pd.DataFrame:
+    """divides a ttf str into parts
+    to be printed normally or marked as
+    sq_check, sq_from, sq_to"""
+    my_dict = {'ttf_str' : ttf_str,
+               'sq_check' : sq_check,
+               'sq_from' : sq_from,
+               'sq_to' : sq_to}
+    pos2mark_dict = {}
+    if sq_check != '':
+        pos2mark_dict[get_linear_pos(sq_check)] = 'sq_check'
+    if sq_from != '':
+        pos2mark_dict[get_linear_pos(sq_from)] = 'sq_from'
+    if sq_to != '':
+        pos2mark_dict[get_linear_pos(sq_to)] = 'sq_to'
+    print(my_dict)
+    print(pos2mark_dict)
+
+    ttf_str_df = pd.DataFrame()
+    ttf_str_dict = {}
+    ttf_str_dict = {'type' : 'norm'} # ttf starts allways 'norm'
+    ttf_part = ''
+    for index, ttf_char in enumerate(ttf_str):
+        if index in pos2mark_dict.keys():
+            # close the old str
+            ttf_str_dict['part'] = ttf_part
+            ttf_str_df = ttf_str_df.append(ttf_str_dict, ignore_index=True)
+            # put the new char - only one char
+            ttf_part = ttf_char
+            ttf_str_dict['part'] = ttf_part
+            ttf_str_dict['type'] = pos2mark_dict[index]
+            ttf_str_df = ttf_str_df.append(ttf_str_dict, ignore_index=True)
+            ttf_str_dict = {}
+            ttf_part = ''
+            ttf_str_dict = {'type' : 'norm'}
+        else:
+            ttf_part += ttf_char
+    ttf_str_dict['part'] = ttf_part
+    ttf_str_df = ttf_str_df.append(ttf_str_dict, ignore_index=True)
+    return ttf_str_df
 
 def main():
     """some test for the chessboard.py"""
@@ -368,6 +472,18 @@ def main():
     print('Chessboard - White - FEN --> TTF')
     print(board2ttf(board))
 
+    print('-------------------------------------')
+    print('Chessboard - White - TTF')
+    print(str2ttf(START_WHITE_STR))
+    print('Chessboard - White - after e2e4')
+    board = chess.Board()
+    board.push_san("e4")
+    print(board2ttf(board))
+
+    print('get_linear_pos(e2) from:', get_linear_pos('e2'))
+    print('get_linear_pos(e4) to:', get_linear_pos('e4'))
+
+    print(divide_ttf_str(board2ttf(board), '', 'e2', 'e4'))
 
 if __name__ == '__main__':
     main()

@@ -6,3 +6,10 @@ my_secrets.py
 my_snippets.ipynb
 test/docx/2001*
 
+# Sphinx
+_build
+_templates
+conf.py
+index.rst
+make.bat
+Makefile
