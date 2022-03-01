@@ -412,7 +412,7 @@ def main():
                                  pgn=one_game_dict['pgn'])
     else:
         eco_result_dict = \
-            eco.new_get_eco_data_for(eco='',
+            eco.new_get_eco_data_for(eco='', \
                                  pgn=one_game_dict['pgn'])
 
     my_doc = gen_document_from_game(one_game_dict,
