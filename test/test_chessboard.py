@@ -252,7 +252,7 @@ class TestChessboard(unittest.TestCase):
             cb.get_linear_pos('e4'), 60)
 
     # Test 25
-    def test_divide_ttf_str(self):
+    def test_divide_ttf_str_2_marks(self):
         """test partitioning the ttf str"""
         # make a chess.board
         board = chess.Board()
@@ -260,6 +260,23 @@ class TestChessboard(unittest.TestCase):
         board.push_san("e4")
         # partition the ttf of the board
         ttf_parts_df = cb.divide_ttf_str(cb.board2ttf(board), '', 'e2', 'e4')
+        # put parts together for comparism
+        ttf_str = ''
+        for _, ttf_part in enumerate(ttf_parts_df['part']):
+            ttf_str += ttf_part
+        self.assertEqual(
+            cb.board2ttf(board), ttf_str)
+
+    # Test 26
+    def test_divide_ttf_str_3_mark(self):
+        """test partitioning the ttf str"""
+        # make a chess.board
+        board = chess.Board('6R1/8/8/7k/2K5/8/8/6R1 w - - 0 1')
+        # with a move
+        board.push_san("Rh1")
+        # partition the ttf of the board
+        ttf_parts_df = cb.divide_ttf_str(cb.board2ttf(board), 'h5', 'g1', 'h1')
+        #print(ttf_parts_df)
         # put parts together for comparism
         ttf_str = ''
         for _, ttf_part in enumerate(ttf_parts_df['part']):

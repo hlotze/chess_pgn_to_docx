@@ -275,11 +275,11 @@ def gen_document_from_game(game_dict: dict,
     # the PGN data for diagram genration
     boards_df = prep_ttfboards_from_pgn(game_dict['pgn'])
 
-    boards_tbl = doc.add_table(2*len(boards_df), 2)
-    for index, fmv in boards_df.iterrows():
-
-        brd_row = boards_tbl.rows[2*index]
-
+    def gen_brd_cell(cell,
+                     ttf_str: str,
+                     sq_check: str,
+                     sq_from: str,
+                     sq_to: str):
         #########################################################
         # At fmv['w_board_ttf'] thr from-/to-
         # and check squares needs to be marked
@@ -296,36 +296,54 @@ def gen_document_from_game(game_dict: dict,
         #   -> Run objects class docx.text.run.Run
         #   or text.html#docx.text.paragraph.add_run
         #########################################################
+        # make parts according the sqaures to mark
+        ttf_parts_df = cb.divide_ttf_str(ttf_str,
+                                         sq_check,
+                                         sq_from,
+                                         sq_to)
+        # put parts together just for test
+        ttf_str = ''
+        for _, ttf_part in enumerate(ttf_parts_df['part']):
+            ttf_str += ttf_part
+
+        cell.text = ttf_str
+        brd_cell_paragraph = cell.paragraphs[0]
+        brd_cell_paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+        brd_cell_paragraph.paragraph_format.keep_with_next = True
+        brd_cell_paragraph.paragraph_format.space_before = Pt(0)
+        brd_cell_paragraph.paragraph_format.space_after = Pt(0)
+        brd_run = brd_cell_paragraph.runs
+        brd_fnt = brd_run[0].font
+        brd_fnt.name = ttf_font_name
+        brd_fnt.size = Pt(16)
+
+
+    boards_tbl = doc.add_table(2*len(boards_df), 2)
+    for index, fmv in boards_df.iterrows():
+
+        brd_row = boards_tbl.rows[2*index]
 
         # the board diagrams
-        brd_row.cells[0].text = fmv['w_board_ttf'][:-1]
-        brd_cell_paragraph = brd_row.cells[0].paragraphs[0]
-        brd_cell_paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
-        brd_cell_paragraph.paragraph_format.keep_with_next = True
-        brd_cell_paragraph.paragraph_format.space_before = Pt(0)
-        brd_cell_paragraph.paragraph_format.space_after = Pt(0)
-        brd_run = brd_cell_paragraph.runs
-        brd_fnt = brd_run[0].font
-        brd_fnt.name = ttf_font_name
-        brd_fnt.size = Pt(16)
+        gen_brd_cell(brd_row.cells[0],
+                     fmv['w_board_ttf'][:-1],
+                     fmv['w_sq_check'],
+                     fmv['w_sq_from'],
+                     fmv['w_sq_to'])
 
-        brd_row.cells[1].text = fmv['b_board_ttf'][:-1]
-        brd_cell_paragraph = brd_row.cells[1].paragraphs[0]
-        brd_cell_paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
-        brd_cell_paragraph.paragraph_format.keep_with_next = True
-        brd_cell_paragraph.paragraph_format.space_before = Pt(0)
-        brd_cell_paragraph.paragraph_format.space_after = Pt(0)
-        brd_run = brd_cell_paragraph.runs
-        brd_fnt = brd_run[0].font
-        brd_fnt.name = ttf_font_name
-        brd_fnt.size = Pt(16)
+        gen_brd_cell(brd_row.cells[1],
+                     fmv['b_board_ttf'][:-1],
+                     fmv['b_sq_check'],
+                     fmv['b_sq_from'],
+                     fmv['b_sq_to'])
 
+        # the SAN below the board diagrams
+        # if last move, add result
         if index == len(boards_df)-1:
             if len(fmv['b_hmv_str']) == 0:
                 fmv['w_hmv_str'] = fmv['w_hmv_str'] + '   ' + game_dict['Result']
             else:
                 fmv['b_hmv_str'] = fmv['b_hmv_str'] + '   ' + game_dict['Result']
-        # the SAN below the board diagrams
+
         brd_row = boards_tbl.rows[2*index+1]
 
         brd_row.cells[0].text = fmv['w_hmv_str']

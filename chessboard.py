@@ -423,7 +423,8 @@ def divide_ttf_str(ttf_str: str,
         if index in pos2mark_dict.keys():
             # close the old str
             ttf_str_dict['part'] = ttf_part
-            ttf_str_df = ttf_str_df.append(ttf_str_dict, ignore_index=True)
+            if ttf_str_dict['part'] != '':
+                ttf_str_df = ttf_str_df.append(ttf_str_dict, ignore_index=True)
             # put the new char - only one char
             ttf_part = ttf_char
             ttf_str_dict['part'] = ttf_part
