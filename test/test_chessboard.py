@@ -13,7 +13,7 @@ from context import chessboard as cb
 class TestChessboard(unittest.TestCase):
     """Collection of tests for chessboard module"""
     # Test 1
-    def test_TTF_DICT(self):
+    def test_ttf_dict(self):
         """correctness of names TTF_DICT"""
         self.assertEqual(cb.TTF_DICT, \
                          {'Chess Condal': 'CONDFONT.TTF',

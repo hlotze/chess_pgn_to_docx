@@ -401,10 +401,10 @@ def divide_ttf_str(ttf_str: str,
     """divides a ttf str into parts
     to be printed normally or marked as
     sq_check, sq_from, sq_to"""
-    my_dict = {'ttf_str' : ttf_str,
-               'sq_check' : sq_check,
-               'sq_from' : sq_from,
-               'sq_to' : sq_to}
+    # my_dict = {'ttf_str' : ttf_str,
+    #            'sq_check' : sq_check,
+    #            'sq_from' : sq_from,
+    #            'sq_to' : sq_to}
     pos2mark_dict = {}
     if sq_check != '':
         pos2mark_dict[get_linear_pos(sq_check)] = 'sq_check'
@@ -412,8 +412,6 @@ def divide_ttf_str(ttf_str: str,
         pos2mark_dict[get_linear_pos(sq_from)] = 'sq_from'
     if sq_to != '':
         pos2mark_dict[get_linear_pos(sq_to)] = 'sq_to'
-    #print(my_dict)
-    #print(pos2mark_dict)
 
     ttf_str_df = pd.DataFrame()
     ttf_str_dict = {}

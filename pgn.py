@@ -21,7 +21,8 @@ import pandas as pd
 from docx import Document
 from docx.enum.text import WD_LINE_SPACING, WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement, ns
-from docx.shared import Inches, Mm, Pt
+from docx.shared import Inches, Mm, Pt, RGBColor
+from docx.oxml.ns import qn
 
 import chessboard as cb
 import eco
@@ -280,42 +281,47 @@ def gen_document_from_game(game_dict: dict,
                      sq_check: str,
                      sq_from: str,
                      sq_to: str):
-        #########################################################
-        # At fmv['w_board_ttf'] thr from-/to-
-        # and check squares needs to be marked
-        # therefore a paragraph needs to be split into
-        # mutiple runs, e.g.
-        #   standard portion
-        #   checked - with its own text & text.font.color
-        #   standard portion
-        #   from square - with its own text & bachground color
-        #   standard portion
-        #   to square - with its own text & bachground color
-        #   standard portion
-        # see python-docx.readthedocs.io
-        #   -> Run objects class docx.text.run.Run
-        #   or text.html#docx.text.paragraph.add_run
-        #########################################################
-        # make parts according the sqaures to mark
+        # make parts according the squares to mark
         ttf_parts_df = cb.divide_ttf_str(ttf_str,
                                          sq_check,
                                          sq_from,
                                          sq_to)
-        # put parts together just for test
-        ttf_str = ''
-        for _, ttf_part in enumerate(ttf_parts_df['part']):
-            ttf_str += ttf_part
 
-        cell.text = ttf_str
-        brd_cell_paragraph = cell.paragraphs[0]
-        brd_cell_paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
-        brd_cell_paragraph.paragraph_format.keep_with_next = True
-        brd_cell_paragraph.paragraph_format.space_before = Pt(0)
-        brd_cell_paragraph.paragraph_format.space_after = Pt(0)
-        brd_run = brd_cell_paragraph.runs
-        brd_fnt = brd_run[0].font
-        brd_fnt.name = ttf_font_name
-        brd_fnt.size = Pt(16)
+        for index, ttf_part in enumerate(ttf_parts_df['part']):
+            brd_cell_paragraph = cell.paragraphs[0]
+            brd_cell_paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+            brd_cell_paragraph.paragraph_format.keep_with_next = True
+            brd_cell_paragraph.paragraph_format.space_before = Pt(0)
+            brd_cell_paragraph.paragraph_format.space_after = Pt(0)
+            run = brd_cell_paragraph.add_run(ttf_part)
+            run.font.name = ttf_font_name
+
+            # black
+            if ttf_parts_df.iloc[index]['type'] == 'norm':
+                run.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
+                run.font.size = Pt(16)
+
+            # red for king in check
+            if ttf_parts_df.iloc[index]['type'] == 'sq_check':
+                #run.font.color.rgb = RGBColor(0xff, 0x00, 0x00)
+                #run.font.size = Pt(16)
+                tag = run._r
+                shd = OxmlElement('w:shd')
+                shd.set(qn('w:val'), 'clear')
+                shd.set(qn('w:color'), 'auto')
+                shd.set(qn('w:fill'), 'fc3535') 
+                run.font.size = Pt(16)
+                tag.rPr.append(shd)                
+
+            # lightgreen for sq_from and sq_to squares
+            if ttf_parts_df.iloc[index]['type'] in ('sq_from', 'sq_to'):
+                tag = run._r
+                shd = OxmlElement('w:shd')
+                shd.set(qn('w:val'), 'clear')
+                shd.set(qn('w:color'), 'auto')
+                shd.set(qn('w:fill'), 'cddba7') 
+                run.font.size = Pt(16)
+                tag.rPr.append(shd)
 
 
     boards_tbl = doc.add_table(2*len(boards_df), 2)
