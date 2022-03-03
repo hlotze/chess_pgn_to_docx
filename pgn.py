@@ -45,13 +45,26 @@ def get_games_from_pgnfile(file_name: str) -> pd.DataFrame:
         games_df = pd.DataFrame()
         # iterate over all games of a file
         while True:
-            game = chess.pgn.read_game(pgn_file)
-            if game is None:
-                break
-            game_dict = dict(game.headers)
-            game_dict["pgn"] = game.board().variation_san(game.mainline_moves())
-            game_dict['file'] = file_name
-            games_df = games_df.append(game_dict, ignore_index=True)
+            try:
+                game = chess.pgn.read_game(pgn_file)
+                if game is None:
+                    break
+            except BaseException as err:
+                print(f"Unexpected {err=}, {type(err)=}")
+                print('at file:', file_name, 'with')
+                print(game)
+                continue
+
+            try:
+                game_dict = dict(game.headers)
+                game_dict["pgn"] = game.board().variation_san(game.mainline_moves())
+                game_dict['file'] = file_name
+                games_df = games_df.append(game_dict, ignore_index=True)
+            except BaseException as err:
+                print(f"Unexpected {err=}, {type(err)=}")
+                print('at file:', file_name, 'with')
+                print(game)
+                continue
     return games_df
 
 def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
