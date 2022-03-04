@@ -13,5 +13,5 @@ conf.py
 index.rst
 make.bat
 Makefile
-DOCX/1879*
-DOCX/2001*
+#DOCX/1879*
+#DOCX/2001*
