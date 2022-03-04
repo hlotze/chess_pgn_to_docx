@@ -51,11 +51,11 @@ def main():
             try:
                 eco_result_dict = {}
                 if 'ECO' in one_game_dict.keys():
-                    eco_result_dict = eco.new_get_eco_data_for( \
+                    eco_result_dict = eco.new_get_eco_data_for(
                         eco=one_game_dict['ECO'],
                         pgn=one_game_dict['pgn'])
                 else:
-                    eco_result_dict = eco.new_get_eco_data_for( \
+                    eco_result_dict = eco.new_get_eco_data_for(
                         eco='',
                         pgn=one_game_dict['pgn'])
             except AttributeError as err:

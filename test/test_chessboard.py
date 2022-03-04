@@ -13,9 +13,10 @@ from context import chessboard as cb
 class TestChessboard(unittest.TestCase):
     """Collection of tests for chessboard module"""
     # Test 1
+
     def test_ttf_dict(self):
         """correctness of names TTF_DICT"""
-        self.assertEqual(cb.TTF_DICT, \
+        self.assertEqual(cb.TTF_DICT,
                          {'Chess Condal': 'CONDFONT.TTF',
                           'Chess Kingdom': 'KINGFONT.TTF',
                           'Chess Leipzig': 'LEIPFONT.TTF',
@@ -24,7 +25,7 @@ class TestChessboard(unittest.TestCase):
     # Test 2
     def test_font_dict(self):
         """correctness of mapping FONT_DICT"""
-        self.assertEqual(cb.FONT_DICT, \
+        self.assertEqual(cb.FONT_DICT,
                          {'-w': '*', 'ow': '.', 'xw': 'x',
                           'Kw': 'k', 'Qw': 'q', 'Rw': 'r',
                           'Bw': 'b', 'Nw': 'n', 'Pw': 'p',
@@ -276,13 +277,14 @@ class TestChessboard(unittest.TestCase):
         board.push_san("Rh1")
         # partition the ttf of the board
         ttf_parts_df = cb.divide_ttf_str(cb.board2ttf(board), 'h5', 'g1', 'h1')
-        #print(ttf_parts_df)
+        # print(ttf_parts_df)
         # put parts together for comparism
         ttf_str = ''
         for _, ttf_part in enumerate(ttf_parts_df['part']):
             ttf_str += ttf_part
         self.assertEqual(
             cb.board2ttf(board), ttf_str)
+
 
 if __name__ == '__main__':
     unittest.main()

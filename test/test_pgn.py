@@ -19,7 +19,7 @@ class TestPgn(unittest.TestCase):
     def test_get_games_from_pgnfile(self):
         """checks the pgn game retrieval from a pgn file"""
         # 'PGN/TEST/test_do_not_change.pgn' should contain 5 PGN games
-        self.assertTrue(len(pgn.get_games_from_pgnfile( \
+        self.assertTrue(len(pgn.get_games_from_pgnfile(
             'test/pgn/test_do_not_change.pgn')) == 5)
 
     # Test 3
@@ -28,9 +28,9 @@ class TestPgn(unittest.TestCase):
         # existing file 'docx_test_datatest_do_not_change' shall not be overwriten,
         # but a new file with incremented numbering shall be chosen as the new
         # file name; for the test: 'docx_test_data/test_do_not_change-1'
-        self.assertTrue(pgn.get_incremented_filename(\
-            'test/docx/test_do_not_change') == \
-                'test/docx/test_do_not_change-1')
+        self.assertTrue(pgn.get_incremented_filename(
+            'test/docx/test_do_not_change') ==
+            'test/docx/test_do_not_change-1')
 
     # Test 4
     def test_prep_ttfboards_from_pgn(self):
@@ -60,9 +60,9 @@ class TestPgn(unittest.TestCase):
             'ÀRnBqKbNr5\n' + \
             '7ÈÉÊËÌÍÎÏ9\n'
         res_dict = pgn.prep_ttfboards_from_pgn('1. e4 e5').iloc[0].to_dict()
-        self.assertTrue( \
-            w_test_brd_str == res_dict['w_board_ttf'] \
-            and \
+        self.assertTrue(
+            w_test_brd_str == res_dict['w_board_ttf']
+            and
             b_test_brd_str == res_dict['b_board_ttf'])
 
     # # Test 5
@@ -74,6 +74,7 @@ class TestPgn(unittest.TestCase):
     # TODO
     # def test_store_document(self):
     #     self.assertEqual(True, pgn.store_document( params ))
+
 
 if __name__ == '__main__':
     unittest.main()

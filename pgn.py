@@ -29,6 +29,7 @@ import eco
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
+
 def get_pgnfile_names_from_dir(pgn_dir='PGN/', ext='.pgn') -> list:
     """Return a python list with filenames
        from a given directory and given extension '.pgn' '.PGN'"""
@@ -38,6 +39,7 @@ def get_pgnfile_names_from_dir(pgn_dir='PGN/', ext='.pgn') -> list:
             if os.path.isfile(os.path.join(pgn_dir, file)):
                 file_names_list.append(os.path.join(pgn_dir, file))
     return sorted(file_names_list)
+
 
 def get_games_from_pgnfile(file_name: str) -> pd.DataFrame:
     """Return a DataFrame with all games of the file_name, incl. headers and pgn game notation."""
@@ -57,7 +59,8 @@ def get_games_from_pgnfile(file_name: str) -> pd.DataFrame:
 
             try:
                 game_dict = dict(game.headers)
-                game_dict["pgn"] = game.board().variation_san(game.mainline_moves())
+                game_dict["pgn"] = game.board().variation_san(
+                    game.mainline_moves())
                 game_dict['file'] = file_name
                 games_df = games_df.append(game_dict, ignore_index=True)
             except BaseException as err:
@@ -66,6 +69,7 @@ def get_games_from_pgnfile(file_name: str) -> pd.DataFrame:
                 print(game)
                 continue
     return games_df
+
 
 def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
     """Return at each row full move info: W & B SAN string and W & B TTF board string"""
@@ -104,11 +108,11 @@ def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
         move_dict['sq_check'] = sq_check
 
         move_dict['board_arr'] = cb.board2arr(board)
-        #print(move_dict)
+        # print(move_dict)
         half_moves_df = half_moves_df.append(move_dict, ignore_index=True)
 
-    half_moves_df = half_moves_df.astype({'FMVN' : np.uint8})
-    #print(half_moves_df)
+    half_moves_df = half_moves_df.astype({'FMVN': np.uint8})
+    # print(half_moves_df)
 
     # half moves to full moves data
     # for direct use at document creation
@@ -133,14 +137,15 @@ def prep_ttfboards_from_pgn(pgn_str: str) -> pd.DataFrame:
             full_move_dict['b_sq_to'] = hmv['sq_to']
             full_move_dict['b_sq_check'] = hmv['sq_check']
             full_move_dict['b_board_ttf'] = cb.arr2ttf(hmv['board_arr'])
-            full_moves_df = full_moves_df.append(full_move_dict, ignore_index=True)
-    full_moves_df = full_moves_df.astype({'FMVN' : np.uint8})
+            full_moves_df = full_moves_df.append(
+                full_move_dict, ignore_index=True)
+    full_moves_df = full_moves_df.astype({'FMVN': np.uint8})
     return full_moves_df
 
 
 def gen_document_from_game(game_dict: dict,
                            eco_dict: dict,
-                           ttf_font_name='Chess Merida')->Document:
+                           ttf_font_name='Chess Merida') -> Document:
     """Return a docx.Document Din A4 with the chess diagrams for a given game_dict"""
 
     # if ttf_font_name not in cb.TTF_dict.keys():
@@ -241,9 +246,10 @@ def gen_document_from_game(game_dict: dict,
     # first page of the booklet
     out_str = ''
     for key in game_dict.keys():
-        #if (key != 'file' and key != 'pgn'):
+        # if (key != 'file' and key != 'pgn'):
         if key not in ('file', 'pgn'):
-            out_str = out_str + '[{k}] \"{v}\"\n'.format(k=key, v=game_dict[key])
+            out_str = out_str + \
+                '[{k}] \"{v}\"\n'.format(k=key, v=game_dict[key])
 
     out_str = out_str + '\n'
     out_str = out_str + f"{game_dict['pgn']}  {game_dict['Result']}\n"
@@ -322,9 +328,9 @@ def gen_document_from_game(game_dict: dict,
                 shd = OxmlElement('w:shd')
                 shd.set(qn('w:val'), 'clear')
                 shd.set(qn('w:color'), 'auto')
-                shd.set(qn('w:fill'), 'fc3535') 
+                shd.set(qn('w:fill'), 'fc3535')
                 run.font.size = Pt(16)
-                tag.rPr.append(shd)                
+                tag.rPr.append(shd)
 
             # lightgreen for sq_from and sq_to squares
             if ttf_parts_df.iloc[index]['type'] in ('sq_from', 'sq_to'):
@@ -332,10 +338,9 @@ def gen_document_from_game(game_dict: dict,
                 shd = OxmlElement('w:shd')
                 shd.set(qn('w:val'), 'clear')
                 shd.set(qn('w:color'), 'auto')
-                shd.set(qn('w:fill'), 'cddba7') 
+                shd.set(qn('w:fill'), 'cddba7')
                 run.font.size = Pt(16)
                 tag.rPr.append(shd)
-
 
     boards_tbl = doc.add_table(2*len(boards_df), 2)
     for index, fmv in boards_df.iterrows():
@@ -359,9 +364,11 @@ def gen_document_from_game(game_dict: dict,
         # if last move, add result
         if index == len(boards_df)-1:
             if len(fmv['b_hmv_str']) == 0:
-                fmv['w_hmv_str'] = fmv['w_hmv_str'] + '   ' + game_dict['Result']
+                fmv['w_hmv_str'] = fmv['w_hmv_str'] + \
+                    '   ' + game_dict['Result']
             else:
-                fmv['b_hmv_str'] = fmv['b_hmv_str'] + '   ' + game_dict['Result']
+                fmv['b_hmv_str'] = fmv['b_hmv_str'] + \
+                    '   ' + game_dict['Result']
 
         brd_row = boards_tbl.rows[2*index+1]
 
@@ -402,8 +409,8 @@ def store_document(doc: Document, file_name: str) -> dict:
     file_name = get_incremented_filename(file_name)
     doc.save(file_name)
     # check that file name ist stored
-    return({'done'      : os.path.exists(file_name),\
-            'file_name' : file_name})
+    return({'done': os.path.exists(file_name),
+            'file_name': file_name})
 
 
 def main():
@@ -427,12 +434,12 @@ def main():
     eco_result_dict = {}
     if 'ECO' in one_game_dict.keys():
         eco_result_dict = \
-            eco.new_get_eco_data_for(eco=one_game_dict['ECO'], \
-                                 pgn=one_game_dict['pgn'])
+            eco.new_get_eco_data_for(eco=one_game_dict['ECO'],
+                                     pgn=one_game_dict['pgn'])
     else:
         eco_result_dict = \
-            eco.new_get_eco_data_for(eco='', \
-                                 pgn=one_game_dict['pgn'])
+            eco.new_get_eco_data_for(eco='',
+                                     pgn=one_game_dict['pgn'])
 
     my_doc = gen_document_from_game(one_game_dict,
                                     eco_result_dict)
@@ -456,6 +463,7 @@ def main():
     print('stored:', ret_dict['file_name'])
 
     return()
+
 
 if __name__ == '__main__':
     main()

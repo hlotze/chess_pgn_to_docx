@@ -7,11 +7,12 @@ from context import eco
 class TestEco(unittest.TestCase):
     """collections of tests for the eco module"""
     # Test 1
+
     def test_normalize_pgn_string(self):
         """test the normalization, as given from chess.board,
         of a pgn chess game notation"""
-        self.assertEqual('1. e4 Nf6 2. e5 Nd5 3. d4 d6',\
-            eco.normalize_pgn_string('1.e4 Nf6 2.e5 Nd5 3.d4 d6'))
+        self.assertEqual('1. e4 Nf6 2. e5 Nd5 3. d4 d6',
+                         eco.normalize_pgn_string('1.e4 Nf6 2.e5 Nd5 3.d4 d6'))
 
     # # Test 2
     # def test_get_eco_data_for__correct_eco(self):
@@ -59,6 +60,7 @@ class TestEco(unittest.TestCase):
         """test the eco classification function of a given pgn only"""
         res = eco.new_get_eco_data_for(pgn='1. b3')
         self.assertTrue(bool(res['eco'] == 'A01' and res['pgn'] == '1. b3'))
+
 
 if __name__ == '__main__':
     unittest.main()
