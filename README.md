@@ -1,6 +1,9 @@
 # pgn2docx
 
-## actually in -- dev mode -- no packages to use
+## Status
+- The repo is quite stable now, although not in prodution mode - its is more a 'beta', but it works as it should.
+- It will not deal with empty PGN games, i.e. a rated game with not game notation, no pgn, e.g. in case of one oponent will not come to the game, so the other wins the game, without any move played.
+  - This is fixed in the next repo [pgn2tex](https://github.com/hlotze/pgn2tex), which uses the same mechnism but produces TeX files.
 
 ## What this site provides 
 - a script `run_pgn2docx.py`  that generates one DOCX file from one chess PGN[^1] match, with a chessboard for each half move, using True Type Font Chess Merida, i.e. 3 full moves / Din A4 page. 
@@ -18,12 +21,12 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
 ## Steps
 - **install the True Type Font (TTF) Chess Merida onto your system; see `TTF/`; documents created and checked with Windows Microsoft Word (365) and Ubuntu LibreOffice (v6.4.7.2), but actually not possible to install Chess Merida at iPad &#128542; so some examples added at DOCX/PDF/*.pdf**
   - TTF at Windows: just double-click the file *.ttf and press the Install button 
-  - TTF at Ubuntu: see [askubuntu](https://askubuntu.com/questions/3697/how-do-i-install-fonts)
+  - TTF at Ubuntu: just the same procedure or see [askubuntu](https://askubuntu.com/questions/3697/how-do-i-install-fonts)
 - check 
   - the PGN[^1] examples; see `PGN/`
   - the DOCX examples; see `DOCX/`
   - requirements.txt for the venv
-- run the Python script `pgn2docx.py`
+- run the Python script `run_pgn2docx.py`
 
 ## Open item
 - [x] finitalize the project - initially done, it works on some machines :-)
@@ -35,12 +38,12 @@ This approach provides a printout in B/W with more contrast as the colored PDFs 
 - [x] change eco.csv - no binary format (!) and different eco classification sizes (2k, 10k); see [project wiki eco](https://github.com/hlotze/pgn2docx/wiki/eco))
 - [x] mark a checked king at the diagrams --> red
 - [x] mark the from- and to-squares of a half move --> lightgreen
-- [ ] add [%eval ...] comments [^3] to the SAN[^4] at bottom of a board
-- [ ] add 
+- [ ] ~~add [%eval ...] comments [^3] to the SAN[^4] at bottom of a board~~
+- [x] add 
   - [x] venv requirements and pipenv (Pipfile, Pipfile.lock)
-  - [ ] packageing - is actually a nightmare, will do it later after linting will become better
+  - [ ] ~~packageing - is actually a nightmare, will do it later after linting will become better~~
   - [x] documentation, wiki done
-- [ ] evtl. refactor coding to get aligned to [`python-chess`](https://python-chess.readthedocs.io/en/latest/) naming conventions and structures
+- [ ] ~~evtl. refactor coding to get aligned to [`python-chess`](https://python-chess.readthedocs.io/en/latest/) naming conventions and structures~~
 
 ## Contact
 [@hlotze](https://github.com/hlotze)

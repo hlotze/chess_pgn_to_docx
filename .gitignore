@@ -5,6 +5,7 @@ __OLD
 my_secrets.py
 my_snippets.ipynb
 test/docx/2001*
+MANIFEST.in
 
 # Sphinx
 _build
